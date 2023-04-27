@@ -1,0 +1,35 @@
+README
+
+2023-04-22, hb9pae
+
+LoRa-iGate.py
+
+Installation Libs
+OLED Treiber
+` sudo python -m pip install --upgrade pip setuptools wheel sudo pip install Adafruit-SSD1306 `
+
+Pillow
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade Pillow
+
+sudo apt-get install libopenjp2-7-dev
+sudo apt install libtiff-dev
+
+BME280
+
+sudo pip3 install smbus2
+
+
+Fonts 
+cd /home/pi
+git clone https://github.com/mps/fonts.git
+
+
+Das Hauptorogramm LoRa-iGate importiert folgende Module
+
+- Config.py	Lesen der Konfigurationsparameter	
+- HMI.py	Display und Tastenbedineung
+- LoraRx.py	Lora Empfämnger  (inkl APRS Routinen)
+
+
+
