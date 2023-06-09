@@ -8,7 +8,7 @@ README
 
 LoRa-iGate für den Raspberry PI. Das Program benötigt den RPI-Aufsatz von der SWISS-ARTG mit dem RF95W Chip RF-Hope
 als LoRa-Receiver.
-Idee sihe:  https://blog.domski.pl/lora-driver-for-raspberry-pi-with-python-wrapper/
+Idee siehe:  https://blog.domski.pl/lora-driver-for-raspberry-pi-with-python-wrapper/
 Github https://github.com/wdomski/LoRa-RaspberryPi
 
 Das Python Programm verwendet die Bibliothek loralob.so (https://github.com/wdomski/LoRa-RaspberryPi) 
@@ -55,14 +55,11 @@ Folgende Bibliotheken / Module werden benötigt:
 Die Fonts sind im Verzeichnis /home/pi/fonts
 
 Das Hauptorogramm IGate.py  importiert folgende Module
-- Config.py     Lesen der Konfigurationsparameter
+- Config.py     Lesen der Konfigurationsparameter, bereitsllen der globalen PArameter
 - HMI.py        Display und Tastenbedineung
 - LoraRx.py     Lora Empfämnger  (inkl APRS Routinen)
-
-
 - APRS.py	Validiert die APRS Daten (Beacon, WX-Beacon und Lora-RX) und sendet diese an APRS-FI
 - BME280.py	Abfrage der WX-Daten 
-- Globals.py	Importiert und Initialisiert die globalen Variablen
 - igate.ini	Persönliche Konfigurationsdatei
 - iGate.log	Logfile
 - IGate.py	Hauptprogramm
