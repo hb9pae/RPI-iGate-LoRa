@@ -20,7 +20,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 
 #Importiere Globale Variablen
-import Globals
+import Config
 
 # Zuordnung Tasten zum GPIO
 #SW1 = 21	# Welcome Menu
@@ -43,8 +43,8 @@ def getip():
 
 def call_sw(channel):
 	menudict = {21:0, 20:0, 16:1, 19:2, 26:3}  # Translate BCM-Pin:Display.Menu 
-	Globals.Menu = menudict.get(channel)
-	#print(Globals.Menu)
+	Config.Menu = menudict.get(channel)
+	#print(Config.Menu)
 
 def initbutton() :
 	GPIO.setmode(GPIO.BCM)
@@ -55,8 +55,8 @@ def initbutton() :
 	GPIO.add_event_detect(16, GPIO.RISING, callback=call_sw, bouncetime=200)  # add rising e$
 	GPIO.add_event_detect(19, GPIO.RISING, callback=call_sw, bouncetime=200)  # add rising e$
 	GPIO.add_event_detect(26, GPIO.RISING, callback=call_sw, bouncetime=200)  # add rising e$
-	Globals.Menu = 0
-	Globals.MenuOld = 9
+	Config.Menu = 0
+	Config.MenuOld = 9
 
 def initdisplay() :
 	RST = None
@@ -109,8 +109,8 @@ def display(page) :
 		draw.rectangle((2, 2, 125, 60 ), outline=255, fill=255)
 		draw.text((25, 1),	"Welcome!",  font=font2, fill=0)
 		draw.text((4, 21),	"LoRA iGate",  font=font1, fill=0)
-		draw.text((4, 35),	 Globals.Call,  font=font1, fill=0)
-		draw.text((4, 49),	"V " + Globals.Version  + " (c)HB9PAE",  font=font1, fill=0)
+		draw.text((4, 35),	 Config.CALL,  font=font1, fill=0)
+		draw.text((4, 49),	"V " + Config.Version  + " (c)HB9PAE",  font=font1, fill=0)
 
 	elif (page == 1) :		# STATUS
 		draw.rectangle((x, y, x1, y1), outline=255, fill=255)
@@ -119,13 +119,13 @@ def display(page) :
 		draw.text((100, 50),	'Pack.',  font=font1, fill=255)
 
 
-		wxT = "{:5.1f}°".format(Globals.Temperature)
-		wxH = "{:7.1f}%".format(Globals.Humidity)
-		wxP = "{:8.1f}hPa".format(Globals.AirPressureNN)
+		wxT = "{:5.1f}°".format(Config.Temperature)
+		wxH = "{:7.1f}%".format(Config.Humidity)
+		wxP = "{:8.1f}hPa".format(Config.AirPressureNN)
 
-		draw.text((4, 4),	"IP:" + Globals.IP, font=font1, fill=255)
-		draw.text((4, 13),	"Call:" + Globals.Call , font=font1, fill=255)
-		draw.text((4, 22),	"APRS Status: " + Globals.AprsStat, font=font1, fill=255)
+		draw.text((4, 4),	"IP:" + Config.IP, font=font1, fill=255)
+		draw.text((4, 13),	"Call:" + Config.CALL , font=font1, fill=255)
+		draw.text((4, 22),	"APRS Status: " + Config.AprsStat, font=font1, fill=255)
 		draw.text((4, 31),	"WX:  Temp:   Hum:   Pres."  , font=font1, fill=255)
 		draw.text((4, 40),	str(wxT) + str(wxH) + str(wxP), font=font1, fill=255)
 
@@ -135,10 +135,10 @@ def display(page) :
 		draw.text((53, 50),   'Conf.',  font=font1, fill=0)
 		draw.text((100, 50),   'Pack.',  font=font1, fill=255)
 
-		draw.text((4, 4),	"Call:   " + Globals.Call, font=font1, fill=255)
-		draw.text((4, 13),	"Position: " + str(Globals.Lat) + "/" + str(Globals.Lon),  font=font1, fill=255)
-		draw.text((4, 22),	"Altitude: " + str(Globals.Alt),  font=font1, fill=255)
-		draw.text((4, 31),	"BME280:   " + str(Globals.BME280),  font=font1, fill=255)
+		draw.text((4, 4),	"Call:   " + Config.CALL, font=font1, fill=255)
+		draw.text((4, 13),	"Position: " + str(Config.LAT) + "/" + str(Config.LON),  font=font1, fill=255)
+		draw.text((4, 22),	"Altitude: " + str(Config.HEIGHT),  font=font1, fill=255)
+		draw.text((4, 31),	"BME280:   " + str(Config.BME280),  font=font1, fill=255)
 
 	elif (page == 3) :		# PACKET
 		draw.rectangle((x+90, y, x1+90, y1), outline=255, fill=255)
@@ -147,14 +147,14 @@ def display(page) :
 		draw.text((100, 50),   'Pack.',  font=font1, fill=0)
 
 		draw.text((4, 4),	"Last Message:",  font=font1, fill=255)
-		draw.text((4, 13),	Globals.LastPkt, font=font1, fill=255)
-		draw.text((4, 22),	"IP:" + Globals.IP, font=font1, fill=255)
-		draw.text((4, 31),	"APRS Status:  " + Globals.AprsStat, font=font1, fill=255)
+		draw.text((4, 13),	Config.LastPkt, font=font1, fill=255)
+		draw.text((4, 22),	"IP:" + Config.IP, font=font1, fill=255)
+		draw.text((4, 31),	"APRS Status:  " + Config.AprsStat, font=font1, fill=255)
 
 
 	display.image(image)
 	display.display()
-	Globals.DisplayOn = time.time()	
+	Config.DisplayOn = time.time()	
 
 
 def main() :

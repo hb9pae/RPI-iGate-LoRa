@@ -1,11 +1,46 @@
+#! /usr/bin/python3
+# -*- coding: utf-8 -*-
+
+"""
+Python Modul Config.py
+Enthält alle Globalen Variablen
+"""
 
 import configparser
 import os
 import pdb
 import logging
 import re
+import datetime
 
-import Globals
+
+__version__     = "0.0.3"
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2023"
+__email__       = "hb9pae@gmail.com"
+
+Version = __version__
+myConfig = "./igate.ini"
+
+Frequ   = 433775000
+SR      = 12
+
+StartTime = datetime.datetime.now()
+DisplayTimeout = 60
+
+Temperature = 1.0
+AirPressureNN = 1.0
+Humidity = 1.0
+
+LastMsg = "--- None ---"
+RxCount = 0
+PktErr = 0
+PktSent = 0
+
+LastPktRRSI = 0
+CurrtRRSI = 0
+SNR = 0
+
 
 # Test auf ungültige Zeichen
 def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):
@@ -30,44 +65,63 @@ def grad2min(_lat, _lon) :
 		latstr = latstr + "S"
 	return(latstr, lonstr)
 
-def readConfig(file) :
+def setGlobals(_conf) :
+	global POS
+
+	#pdb.set_trace()
+	for section in _conf :
+		for key in _conf[section] :
+			globals()[key.upper()] = _conf[section][key]
+		POS = grad2min(float(LON), float(LAT) )
+
+
+def getConfig(file) :
 	if (os.path.isfile(file)) :
-		cp=configparser.ConfigParser()
-
-		cp.read(file)
-		Globals.Call = cp.get("APRS-IS","Call").upper()
-		Globals.Passcode = cp.get("APRS-IS", "Passcode")
-		Globals.Info = cp.get("APRS-IS","Info")
-		Globals.Active = cp.get("APRS-IS","Active")
-		
-		Globals.Lat = float(cp.get("Position","Lat"))
-		Globals.Lon = float(cp.get("Position","Lon"))
-		Globals.Pos = grad2min(Globals.Lon, Globals.Lat)
-		Globals.Alt = int(cp.get("Position", "Height"))
-
-		Globals.BeaconInterval = int(cp.get("Beacons","BeaconInterval") )
-		Globals.BeaconMessage  = cp.get("Beacons", "BeaconMessage")
-
-		Globals.BME280 = bool(cp.get("WX","BME280"))
-		Globals.WxInterval = int(cp.get("WX","WxInterval") )
-		#pdb.set_trace()
+		config = configparser.ConfigParser()
+		config.read(file)
+		dictionary = {}
+		for section in config.sections():
+			dictionary[section] = {}
+			for option in config.options(section):
+				dictionary[section][option] = config.get(section, option)
+		return(dictionary)
 	else :
-		print("No Configfile, create new one")
-
-		config=configparser.ConfigParser()
-		config["APRS-IS"] = {"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "Active" : False}
-		config["Position"] = {"Lon" : "47.53668", "Lat" : "8.58164", "Height" : "399"}
-		config["Beacons"] = {"BeaconInterval" : "300", "BeaconMessage" : "-"}
-		config["WX"] = {"BME280" : "True", "WxInterval" : "300"}
-		with open(file, 'w') as configfile:
-			config.write(configfile)
-		print("Done")
+		mkConfig(file)
 		exit(1)
 
+def mkConfig(file) :
+		logging.warning("No Configfile found, create new one and exit Program")
+
+		# ---- Write Header to  Configfile 
+		now = datetime.datetime.now() 
+		header1 = "# APRS iGate configuration\n"
+		header2 = "# (c) hb9pae@gmail.com\n"
+		header3 = now.strftime("# Created: %d/%m/%Y %H:%M:%S\n")
+		f = open(file, "w")
+		f.writelines(header1)
+		f.writelines(header2)
+		f.writelines(header3)
+		f.close()
+
+		# ---- Write Configuration Template 
+		_conf=configparser.ConfigParser()
+		_conf["APRS-IS"] = {
+			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "Aprsis" : "False",\
+			"lon" : "47.53668", "lat" : "8.58164", "height" : "399",\
+			"beaconinterval" : "300", "BeaconMessage" : "-", "BME280" : "True", "WxInterval" : "300"\
+			}
+		with open(file, 'a') as configfile:
+			_conf.write(configfile)
+		
+
+def main() :
+	myconf = getConfig("test.ini")
+	setGlobals(myconf)
 
 
-#logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-#logger = logging.getLogger(__name__)
+if __name__ == "__main__":
+        main()
+
 
 
 

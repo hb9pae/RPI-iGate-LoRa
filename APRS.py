@@ -6,24 +6,23 @@ import logging
 import aprslib
 import pdb
 
-import Globals
+import Config
 
 
 def init() :
-	#Globals.BeaconTxt = Globals.Call +">APRS,TCPIP:=" + Globals.Pos[0] + "/" + Globals.Pos[1] + "& " + Globals.Info
-	Globals.AprsStat = "Not active"
+	Config.AprsStat = "Not active"
 
 def sendMsg( msg ) :
-	if (Globals.Active.lower() in ['true', '1', 'yes'] ) :
-		AIS = aprslib.IS(Globals.Call, Globals.Passcode, port=14580)
+	if (Config.APRSIS.lower() in ['true', '1', 'yes'] ) :
+		AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
 		AIS.connect()
 		AIS.sendall(msg)
 		AIS.close()
-		Globals.AprsStat = "Active"
+		Config.AprsStat = "Active"
 	else :
-		logger.info("APRS-IS: %s" % Globals.Active)
-		Globals.AprsStat = "Test"
-	Globals.LastPkt = msg
+		logger.info("APRS-IS: %s" % Config.APRSIS)
+		Config.AprsStat = "Test"
+	Config.LastPkt = msg
 	logger.info("APRS Packet sent: %s" % msg)
 
 
