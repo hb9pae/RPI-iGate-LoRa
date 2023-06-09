@@ -20,12 +20,10 @@ def sendMsg( msg ) :
 		AIS.close()
 		Config.AprsStat = "Active"
 	else :
-		logger.info("APRS-IS: %s" % Config.APRSIS)
+		logging.info("APRS-IS upload: %s",  Config.APRSIS)
 		Config.AprsStat = "Test"
 	Config.LastPkt = msg
-	logger.info("APRS Packet sent: %s" % msg)
+	logging.info("APRS Packet sent: %s" , msg)
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-logger = logging.getLogger(__name__)
 

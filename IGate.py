@@ -20,36 +20,6 @@ from threading import Timer
 from datetime import timezone
 import datetime
 
-"""
-__version__     = "0.0.3"
-__author__      = "HB9PAE, Peter"
-__copyright__   = "Copyright 2023"
-__email__       = "hb9pae@gmail.com"
-
-
-Version = __version__
-myConfig = "./igate.ini"
-
-RxCount = 0
-
-Frequ   = 433775000
-SR      = 12
-
-StartTime = datetime.datetime.now()
-DisplayTimeout = 60
-
-Temperature = 1.0
-AirPressureNN = 1.0
-Humidity = 1.0
-
-LastMsg = "--- None ---"
-PktErr = 0
-PktSent = 0
-
-LastPktRRSI = 0
-CurrtRRSI = 0
-SNR = 0
-"""
 
 class RepeatedTimer(object):
 	def __init__(self, interval, function, *args, **kwargs):
@@ -81,13 +51,10 @@ def sendBeacon(_txt) :
 	APRS.sendMsg(BeaconTxt)
 
 def sendWx(_txt) :
-
 	try :
 		_altitude = int(Config.HEIGHT)
 	except:
-		logging.basicConfig(level=logging.info, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-		logger = logging.getLogger(__name__)
-		logger.info("Wrong Height format")
+		logging.info("Wrong Height format")
 		_altitude = 400
  
 	(temp, press_nn, hum) = BME280.getBME280(_altitude)
@@ -129,8 +96,6 @@ def init() :
 	LoraRx.init()
 
 def main() :
-	logging.basicConfig(level=logging.info, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-	logger = logging.getLogger(__name__)
 
 	sendBeacon(" Start")
 	bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon, " " + str(Config.RxCount) ) 
@@ -139,7 +104,7 @@ def main() :
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
 		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx, "") 
-		logger.info("BME280 detected")
+		logging.info("BME280 detected")
 
 	try:
 		while(1) :
@@ -163,6 +128,7 @@ def main() :
 
 
 if __name__ == "__main__":
+	logging.basicConfig(filename="iGate.log", level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
 	init()
 	main()
 

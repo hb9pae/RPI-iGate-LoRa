@@ -23,31 +23,25 @@ import Config
 
 def wx(name):
 	print("Send new %s!" % name)
-	logger.info("WX sent: %s" % name)
+	logging.info("WX sent: %s" % name)
 
 def gotPacket(buffer) :
 	message="".join(map(chr,buffer[0]))
 	message=message[3:]
-	#logger.info("RX Packet received: %s " %  message)
+	logging.info("RX Packet received")
 	Config.RxCount +=1
 	addrend = message.find(":",5,20)
 	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
 	APRS.sendMsg(message)
 
 def init() :
-	logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-	logger = logging.getLogger(__name__)
-
 	loralib.init(1, Config.Frequ, Config.SR)
 	Config.RxCount =0
-	logger.info("init() done")
+	logging.info("init() done")
 #	pdb.set_trace()
 
 
 def main() :
-	#bcTimer = RepeatedTimer(Config.BeaconIntervall, sendBeacon, msgBeaconStatus + str(rxCount)) 
-	#wxTimer = RepeatedTimer(20, wx, "WX") 
-
 	try:
 		while(1) :
 			msg=loralib.recv()

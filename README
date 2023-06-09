@@ -1,35 +1,73 @@
 README
 
-2023-04-22, hb9pae
-
-LoRa-iGate.py
-
-Installation Libs
-OLED Treiber
-` sudo python -m pip install --upgrade pip setuptools wheel sudo pip install Adafruit-SSD1306 `
-
-Pillow
-python3 -m pip install --upgrade pip
-python3 -m pip install --upgrade Pillow
-
-sudo apt-get install libopenjp2-7-dev
-sudo apt install libtiff-dev
-
-BME280
-
-sudo pip3 install smbus2
+2023-04-27, hb9pae
 
 
-Fonts 
-cd /home/pi
-git clone https://github.com/mps/fonts.git
+
+# H1 RPI-iGate-LoRa
+
+LoRa-iGate für den Raspberry PI. Das Program benötigt den RPI-Aufsatz von der SWISS-ARTG mit dem RF95W Chip RF-Hope
+als LoRa-Receiver.
+Idee sihe:  https://blog.domski.pl/lora-driver-for-raspberry-pi-with-python-wrapper/
+Github https://github.com/wdomski/LoRa-RaspberryPi
+
+Das Python Programm verwendet die Bibliothek loralob.so (https://github.com/wdomski/LoRa-RaspberryPi) 
+
+Voraussetzungen
+- Raspberry PI mit einem aktuellen OS (Debian)
+- Aufsteckplatine mit einem LoRa-Modul RF95W
+
+Hardwarekonfiguration
+
+(File LORA/lora.c)
+int ssPin = 10; //ChipSelect  BCM 8
+int dio0  = 21; //IRQ  BCM 5
+int RST   = 22; //RESET BCM 6
+
+// Set spreading factor (SF7 - SF12)
+sf_t sf = SF12;
+
+// Set center frequency
+uint32_t  freq = 433775000 ; // in Mhz! 
+
+ 
+Folgende Bibliotheken / Module werden benötigt:
+- Python3
+
+- OLED Treiber
+	- Adafruit-SSD1306 
+	`sudo python -m pip install --upgrade pip setuptools wheel sudo pip install Adafruit-SSD1306`
+
+- Pillow
+	sudo python3 -m pip install --upgrade pip
+	sudo python3 -m pip install --upgrade Pillow
+
+	sudo apt-get install libopenjp2-7-dev
+	sudo apt install libtiff-dev
+
+- BME280
+	sudo pip3 install smbus2
+
+- Fonts
+	cd /home/pi
+	git clone https://github.com/mps/fonts.git
+
+Die Fonts sind im Verzeichnis /home/pi/fonts
+
+Das Hauptorogramm IGate.py  importiert folgende Module
+- Config.py     Lesen der Konfigurationsparameter
+- HMI.py        Display und Tastenbedineung
+- LoraRx.py     Lora Empfämnger  (inkl APRS Routinen)
 
 
-Das Hauptorogramm LoRa-iGate importiert folgende Module
-
-- Config.py	Lesen der Konfigurationsparameter	
-- HMI.py	Display und Tastenbedineung
-- LoraRx.py	Lora Empfämnger  (inkl APRS Routinen)
+- APRS.py	Validiert die APRS Daten (Beacon, WX-Beacon und Lora-RX) und sendet diese an APRS-FI
+- BME280.py	Abfrage der WX-Daten 
+- Globals.py	Importiert und Initialisiert die globalen Variablen
+- igate.ini	Persönliche Konfigurationsdatei
+- iGate.log	Logfile
+- IGate.py	Hauptprogramm
+- LORA		Verzeichnis mit der LoRa-Bibliothek
+- loralib.so	LoRa Bibliothek
 
 
 
