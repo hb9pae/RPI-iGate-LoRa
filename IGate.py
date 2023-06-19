@@ -128,7 +128,8 @@ def main() :
 
 
 if __name__ == "__main__":
-	logging.basicConfig(filename="iGate.log", level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
+	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
+	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
 	init()
 	main()
 

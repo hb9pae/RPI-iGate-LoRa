@@ -13,6 +13,14 @@
  *
  *******************************************************************************/
 
+// 2023-06-13 hb9pae, new pin assignment
+//  Raspberry connections
+// usr WinringPi Pin Numbers!
+//int ssPin = 10; // ChipSelect CE0,  WiPi 10, BCM 8
+//int dio0  = 0;  // IRQ    WiPi 0, BCM 17
+//int RST   = 22; // RESET  WiPi 22, BCM 6
+//int LED   = 7;  // LED     WiPi 7, BCM 4
+//---------------------
 // 2023-04-10 hb9pae
 // 2023-04-29 hb9pae: 
 // - Datasheet RFM95W: 
@@ -182,11 +190,10 @@ enum sf_t { SF7=7, SF8, SF9, SF10, SF11, SF12 };
 //  Raspberry connections
 // usr WinringPi Pin Numbers!
 
-int ssPin = 10;	//ChipSelect  BCM 8
-int dio0  = 21;	//IRQ  BCM 5
-int RST   = 22;	//RESET BCM 6
-
-int LED	  = 7;  //LED BCM 4
+int ssPin = 10;	//ChipSelect CE0,  WiPi 10, BCM 8
+int dio0  = 0;	//IRQ 	 WiPi 0, BCM 17
+int RST   = 22;	//RESET  WiPi 22, BCM 6
+int LED	  = 7;  //LED 	  WiPi 7, BCM 4
 
 // Set spreading factor (SF7 - SF12)
 sf_t sf = SF12;

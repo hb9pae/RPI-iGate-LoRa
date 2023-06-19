@@ -1,0 +1,13 @@
+[Unit]
+Description=LoRa APRS iGate service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+User=hb9pae
+WorkingDirectory=/home/hb9pae/RPI-iGate-LoRa
+ExecStart=/usr/bin/python3 /home/hb9pae/RPI-iGate-LoRa/IGate.py
+
+[Install]
+WantedBy=multi-user.target

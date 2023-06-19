@@ -20,7 +20,7 @@ __copyright__   = "Copyright 2023"
 __email__       = "hb9pae@gmail.com"
 
 Version = __version__
-myConfig = "./igate.ini"
+myConfig = "/home/hb9pae/RPI-iGate-LoRa/igate.ini"
 
 Frequ   = 433775000
 SR      = 12

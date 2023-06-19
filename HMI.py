@@ -100,8 +100,8 @@ def display(page) :
 	# Load default font.
 	font = ImageFont.load_default()
 	font0 = ImageFont.load_default()
-	font1 = ImageFont.truetype("/home/pi/fonts/Vera.ttf",10)
-	font2 = ImageFont.truetype("/home/pi/fonts/Vera.ttf",16)
+	font1 = ImageFont.truetype("Vera.ttf",10)
+	font2 = ImageFont.truetype("Vera.ttf",16)
 	#draw rectangle for active menu
 
 	if (page == 0) :		# WELCOME
