@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} iGate Configuration {% endblock %}</h1>
+
+    <form method="post">
+        <br>
+	<table>
+	{% for key, value in content.items() %}
+		<tr>
+			<td> 	<label for={{ key }}>{{ key|upper }} </label> </td>
+			<td> &nbsp; </td>
+			<td>	<input type="text" name={{ key }} value="{{ value }}" autocomplete="off" ></input> </td>
+		</tr> 
+	{% endfor %}
+	</table>
+        <p> <button type="submit">Speichen</button>
+    </form>
+
+{% endblock %}

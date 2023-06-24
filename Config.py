@@ -20,7 +20,7 @@ __copyright__   = "Copyright 2023"
 __email__       = "hb9pae@gmail.com"
 
 Version = __version__
-myConfig = "/home/hb9pae/RPI-iGate-LoRa/igate.ini"
+myConfig = "/home/pi/RPI-iGate-LoRa/igate.ini"
 
 Frequ   = 433775000
 SR      = 12
@@ -40,6 +40,20 @@ PktSent = 0
 LastPktRRSI = 0
 CurrtRRSI = 0
 SNR = 0
+
+
+# Variablen aus igate.ini ----
+CALL = "NOCALL"
+PASSCODE = ""
+INFO = "" 
+APRSIS = False
+LON = 0.0
+LAT = 0.0
+HEIGHT = 0
+BEACONINTERVAL = 600
+BEACONMESSAGE = ""
+BME280 = False
+WXINTERVALL = 300
 
 
 # Test auf ungültige Zeichen
@@ -74,7 +88,6 @@ def setGlobals(_conf) :
 			globals()[key.upper()] = _conf[section][key]
 		POS = grad2min(float(LON), float(LAT) )
 
-
 def getConfig(file) :
 	if (os.path.isfile(file)) :
 		config = configparser.ConfigParser()
@@ -84,6 +97,7 @@ def getConfig(file) :
 			dictionary[section] = {}
 			for option in config.options(section):
 				dictionary[section][option] = config.get(section, option)
+		#print("getConfig()")
 		return(dictionary)
 	else :
 		mkConfig(file)

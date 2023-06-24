@@ -37,7 +37,7 @@ def gotPacket(buffer) :
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)
 	Config.RxCount =0
-	logging.info("init() done")
+	logging.info("LoRa RX init done")
 #	pdb.set_trace()
 
 

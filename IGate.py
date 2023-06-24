@@ -16,9 +16,11 @@ import Config
 import APRS
 import BME280
 import time
+import threading
 from threading import Timer
 from datetime import timezone
 import datetime
+import app
 
 
 class RepeatedTimer(object):
@@ -77,14 +79,14 @@ def sendWx(_txt) :
 	WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
 	APRS.sendMsg(WxReport)
 
-def elapsedTime() :
+def aelapsedTime() :
 	end_time = time.time()
 	tmp = end_time - Config.StartTime
 	_h = tmp//3600
 	tmp = tmp - 3600 * _h
 	_m = tmp //60
 	_s = tmp - 60 * _m
-	print("Elapsed Time: %dh %dm %ds" %(_h,_m,_s))
+	return("%dh %dm %ds" %(_h,_m,_s))
 
 def init() :
 	Config.StartTime = time.time()
@@ -94,42 +96,47 @@ def init() :
 	Config.IP = HMI.getip()
 	HMI.initbutton()
 	LoraRx.init()
+	Config.dirtyFlag = False
+	logging.info("IGate init done")
 
 def main() :
-
 	sendBeacon(" Start")
 	bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon, " " + str(Config.RxCount) ) 
 
 	#pdb.set_trace()
+	webgui = threading.Thread(target=app.run, args=(Config.IP,))
+	webgui.start()
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
 		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx, "") 
 		logging.info("BME280 detected")
 
-	try:
-		while(1) :
-			msg=LoraRx.loralib.recv()
-			if msg[5] == 0 and msg[1] > 0:
-				LoraRx.gotPacket(msg)
-			time.sleep(0.05) 
+	while(True) :
+		msg=LoraRx.loralib.recv()
+		if msg[5] == 0 and msg[1] > 0:
+			LoraRx.gotPacket(msg)
+		time.sleep(0.05) 
 
-			if (Config.Menu < 5) :
-				HMI.display(Config.Menu)
-				Config.Menu = 99
-			if (time.time() - Config.DisplayOn) > Config.DisplayTimeout :
-				HMI.initdisplay()
-				Config.DisplayOn += 99999999.9
+		if (Config.Menu < 5) :
+			HMI.display(Config.Menu)
+			Config.Menu = 99
+		if (time.time() - Config.DisplayOn) > Config.DisplayTimeout :
+			HMI.initdisplay()
+			Config.DisplayOn += 99999999.9
+		if  (Config.dirtyFlag) :
+			logging.info("Configuration reloaded")
+			Config.dirtyFlag = False
 
-	finally:
-		bcTimer.stop() 
+	bcTimer.stop()
+	if (Config.BME280.lower() in ['true', '1', 'yes'] ) : 
 		wxTimer.stop() 
-		HMI.initdisplay()
-
+	HMI.initdisplay()
 
 
 if __name__ == "__main__":
 	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
 	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
+	logging.info("IGate startup")
 	init()
 	main()
 
