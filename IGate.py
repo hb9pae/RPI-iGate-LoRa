@@ -48,8 +48,8 @@ class RepeatedTimer(object):
 		self._timer.cancel()
 		self.is_running = False
 
-def sendBeacon(_txt) :
-	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "/" + Config.POS[1] + "& " + Config.INFO + _txt
+def sendBeacon() :
+	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "/" + Config.POS[1] + "& " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
 def sendWx(_txt) :
@@ -100,11 +100,13 @@ def init() :
 	logging.info("IGate init done")
 
 def main() :
-	sendBeacon(" Start")
-	bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon, " " + str(Config.RxCount) ) 
+	sendBeacon()
+	#bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon, " " + str(Config.RxCount) ) 
+	bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
+	bcTimer.start()
 
 	#pdb.set_trace()
-	webgui = threading.Thread(target=app.run, args=(Config.IP,))
+	webgui = threading.Thread(target=app.run, args=("127.0.0.1",))
 	webgui.start()
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
@@ -134,8 +136,8 @@ def main() :
 
 
 if __name__ == "__main__":
-	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
-	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s:%(message)s')
+	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 	logging.info("IGate startup")
 	init()
 	main()

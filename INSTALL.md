@@ -68,19 +68,21 @@ cp loralib.so ../
 -------------
 
 sudo apt install python3-pip
-pip3 install Adafruit-SSD1306
+sudo apt-get install libopenjp2-7-dev 
+sudo apt-get install libtiff-dev
 
-pip3 install hexdump
+
+pip3 install Adafruit-SSD1306
 pip3 install aprslib
+pip3 install smbus2
+
 
 python3 -m pip install --upgrade pip
 python3 -m pip install --upgrade Pillow
 
-sudo apt-get install libopenjp2-7-dev 
-sudo apt-get install libtiff-dev
-
-pip3 install smbus2
 
 
+
+git clone https://github.com/hb9pae/RPI-iGate-LoRa.git
 
 

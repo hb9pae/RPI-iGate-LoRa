@@ -86,7 +86,7 @@ def setGlobals(_conf) :
 	for section in _conf :
 		for key in _conf[section] :
 			globals()[key.upper()] = _conf[section][key]
-		POS = grad2min(float(LON), float(LAT) )
+		POS = grad2min(float(LAT), float(LON) )
 
 def getConfig(file) :
 	if (os.path.isfile(file)) :

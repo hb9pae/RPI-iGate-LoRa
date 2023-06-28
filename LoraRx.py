@@ -13,7 +13,6 @@ __email__ = "hb9pae@gmail.com"
 import loralib
 import time
 import pdb
-from hexdump import hexdump
 import logging
 from threading import Timer
 import aprslib

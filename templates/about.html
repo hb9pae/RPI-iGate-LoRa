@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} About {% endblock %}</h1>
-    <h3>FlaskApp is a Flask web application written in Python.</h3>
+    <h1>{% block title %} Info {% endblock %}</h1>
+    <pre>
+    Das  LoRa IGate (Internet Gateway) leitet alle gültigen LoRa APRS Positionspakete Pakete, die auf RF gehört werden, 
+    an das APRS-IS weiter. Im Gegensatz zu den üblichen AX25 APRS-IGates werden empfangenen Pakete nicht mehr über 
+    RF ausgestrahlt, d.h. der IGate arbeitet als reiner Empfänger. 
+    </pre>
+
+    <p> (c) 2023 by HB9PAE, hb9pae@swiss-artg.ch 
 {% endblock %}
