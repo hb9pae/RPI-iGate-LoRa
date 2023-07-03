@@ -5,9 +5,12 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-User=hb9pae
-WorkingDirectory=/home/hb9pae/RPI-iGate-LoRa
-ExecStart=/usr/bin/python3 /home/hb9pae/RPI-iGate-LoRa/IGate.py
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/RPI-iGate-LoRa
+VIRTUAL_ENV=/opt/lorapy/env
+Environment=PATH=$VIRTUAL_ENV/bin;$PATH
+ExecStart= source /opt/lorapy/env/bin/python /home/pi/RPI-iGate-LoRa/IGate.py
 
 [Install]
 WantedBy=multi-user.target

@@ -19,6 +19,7 @@ def sendMsg( msg ) :
 		AIS.sendall(msg)
 		AIS.close()
 		Config.AprsStat = "Active"
+		Config.MsgSent +=1
 	else :
 		logging.info("APRS-IS upload: %s",  Config.APRSIS)
 		Config.AprsStat = "Test"

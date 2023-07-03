@@ -11,29 +11,26 @@
 <body>
 
 <div class="container-fluid mt-3">
-    <h3> LoRa APRS iGate </h3><p>
+    <h3> LoRa APRS iGate </h3>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
   <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="{{url_for('static', filename='artg.png')}}"  alt="Logo" style="width:60px;">
+    </a>
     <ul class="navbar-nav">
       <li class="nav-item">
-         <img src="{{url_for('static', filename='artg.png')}}"  alt="Logo" style="width:50px;">
+        <a class="nav-link" href="{{ url_for('status') }}">Status</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link">&nbsp;</a>
+        <a class="nav-link" href="{{ url_for('log') }}">Logfile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('status') }}"><h4>Status</h4></a>
+        <a class="nav-link" href="{{ url_for('config') }}">Konfiguration</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('log') }}"><h4>Logfile</h4></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('config') }}"><h4>Konfiguration</h4></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('about') }}"><h4>Info</h4</a>
+        <a class="nav-link" href="{{ url_for('about') }}">Info</a>
       </li>
     </ul>
   </div>

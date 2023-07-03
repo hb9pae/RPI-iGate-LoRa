@@ -35,10 +35,11 @@ Humidity = 1.0
 LastMsg = "--- None ---"
 RxCount = 0
 PktErr = 0
-PktSent = 0
+# Message to APRS-IS
+MsgSent = 0
 
-LastPktRRSI = 0
-CurrtRRSI = 0
+PktRRSI = 0
+RRSI = 0
 SNR = 0
 
 

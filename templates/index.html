@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Status {% endblock %}</h1>
-    <h3>{{ utc_dt }}</h3>
+    <h3>{% block title %} Status {% endblock %}</h3>
 	<table>
 	{% for key, value in content.items() %}
 		<tr>

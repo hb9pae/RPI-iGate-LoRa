@@ -86,15 +86,15 @@ def status() :
 		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
 			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
 			"Temperature":Config.Temperature, "AirPressure NN":Config.AirPressureNN, "Humidity":Config.Humidity," ":" ",
-			"Last Mssage":Config.LastMsg,"Current  RRSI": Config.CurrtRRSI, "Last Pkt RSSI": Config.LastPktRRSI,
-			"Packet Err": Config.PktErr, "Packet Sent": Config.PktSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
+			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "PktRSSI": Config.PktRSSI,
+			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MSGSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
 			"Uptime": elapsedTime()
 		}
 	else : 
 		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
 			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
-			"Last Mssage":Config.LastMsg,"Current  RRSI": Config.CurrtRRSI, "Last Pkt RSSI": Config.LastPktRRSI,
-			"Packet Err": Config.PktErr, "Packet Sent": Config.PktSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
+			"Last Mssage":Config.LastMsg,"Current  RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI,
+			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
 			"Uptime": elapsedTime()
 		}
 
@@ -112,4 +112,4 @@ if __name__ == '__main__':
 #	x.start()
 #	while 1 :
 #		time.sleep(10)
-	run("1")
+	run("192.168.0.145")

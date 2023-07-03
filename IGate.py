@@ -105,8 +105,8 @@ def main() :
 	bcTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
 	bcTimer.start()
 
-	#pdb.set_trace()
-	webgui = threading.Thread(target=app.run, args=("127.0.0.1",))
+	#webgui = threading.Thread(target=app.run, args=("127.0.0.1",))
+	webgui = threading.Thread(target=app.run, args=("0.0.0.0",))
 	webgui.start()
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
@@ -115,7 +115,11 @@ def main() :
 
 	while(True) :
 		msg=LoraRx.loralib.recv()
+		if msg[1] > 0 and msg[5] > 1:
+			PktErr += 1
+			logging.info("Packet received, CRC Error")
 		if msg[5] == 0 and msg[1] > 0:
+			#pdb.set_trace()
 			LoraRx.gotPacket(msg)
 		time.sleep(0.05) 
 
