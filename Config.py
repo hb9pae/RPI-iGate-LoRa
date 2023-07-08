@@ -122,7 +122,7 @@ def mkConfig(file) :
 		_conf["APRS-IS"] = {
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "Aprsis" : "False",\
 			"lon" : "47.53668", "lat" : "8.58164", "height" : "399",\
-			"beaconinterval" : "300", "BeaconMessage" : "-", "BME280" : "True", "WxInterval" : "300"\
+			"beaconinterval" : "600", "BeaconMessage" : "-", "BME280" : "False", "WxInterval" : "300"\
 			}
 		with open(file, 'a') as configfile:
 			_conf.write(configfile)
