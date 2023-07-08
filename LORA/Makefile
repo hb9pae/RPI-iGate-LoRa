@@ -3,7 +3,8 @@
 
 CC=g++
 CFLAGS=-c -g -Wall -pedantic
-LIBS=-lwiringPi
+LIBS=-lwiringPi 
+#-lpython3.7m
 PYTHONVER=python3.7
 
 all: lora_app loralib

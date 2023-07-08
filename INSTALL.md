@@ -2,32 +2,51 @@ Installation iGate
 ------------------
 
 2023-06-15
-
+2023-07-07, hb9pae
 
 sudo apt update
-sudo apt upgrade 
+sudo apt upgrade
 sudo apt install git
 
 echo "alias python=/usr/bin/python3" >> ~/.bashrc
 source ~/.bashrc
 
-https://github.com/hb9pae/RPI-iGate-LoRa.git
+
+sudo apt install python3-pip
+sudo apt install python3-dev 
+sudo apt install libopenjp2-7-dev
+sudo apt install libtiff-dev
+
+sudo  python -m pip install --upgrade pip setuptools wheel
+sudo pip install Adafruit-SSD1306
+sudo python -m pip install --upgrade pip
+sudo python -m pip install --upgrade Pillow
+
+sudo pip install smbus2
+sudo pip install loralib
+sudo pip install aprslib
+sudo pip install flask
+
+wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
+	sudo dpkg -i wiringpi-2.61-1-armhf.deb
+
+raspi-config 
+- ssh enable
+- i2c enable 
+- spi enable
+- serial enable
+	
+sudo chmod 777 /var/log/
 
 git clone https://github.com/hb9pae/RPI-iGate-LoRa.git
-sudo apt-get install python3-dev 
 
-Raspi-Config:	
-	SSH enable
-	SPI enable
-	i2C enable
-	serial enable
-
-	
 cd RPI-iGate-LoRa
 cd LORA
+	Kontrolliere/passe die  aktuelle Python Version im Makefile an:
+	Python Version 3.9 
+
 	make clean
 	male all
-
 	
 Test Library:	
 ./lora_app.exe test
@@ -66,23 +85,4 @@ Version: 0x12
 cp loralib.so ../
 
 -------------
-
-sudo apt install python3-pip
-sudo apt-get install libopenjp2-7-dev 
-sudo apt-get install libtiff-dev
-
-
-pip3 install Adafruit-SSD1306
-pip3 install aprslib
-pip3 install smbus2
-
-
-python3 -m pip install --upgrade pip
-python3 -m pip install --upgrade Pillow
-
-
-
-
-git clone https://github.com/hb9pae/RPI-iGate-LoRa.git
-
 

@@ -53,31 +53,34 @@ def sendBeacon() :
 	APRS.sendMsg(BeaconTxt)
 
 def sendWx(_txt) :
-	try :
-		_altitude = int(Config.HEIGHT)
-	except:
-		logging.info("Wrong Height format")
-		_altitude = 400
- 
-	(temp, press_nn, hum) = BME280.getBME280(_altitude)
-	Config.Temperature = temp
-	Config.AirPressureNN = press_nn
-	Config.Humidity = hum
-	_tempf = (temp * 1.8) + 32 # APRS benötigt Farenheit 
-	#pdb.set_trace()
+	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
+		try :
+			_altitude = int(Config.HEIGHT)
+		except:
+			logging.info("Wrong Height format")
+			_altitude = 400
+		try :
+			(temp, press_nn, hum) = BME280.getBME280(_altitude)
+			Config.Temperature = temp
+			Config.AirPressureNN = press_nn
+			Config.Humidity = hum
+			_tempf = (temp * 1.8) + 32 # APRS benötigt Farenheit 
+			#pdb.set_trace()
 
-	dt = datetime.datetime.now(timezone.utc)
-	_DHM = dt.strftime("@%d%H%Mz")
-	_pos = Config.POS[0] + "/" + Config.POS[1] 
-	_wind  = "_.../...g..."
-	_temp = "t" + str(int(round(_tempf,1)))
-	_rain = "r...p...P..."
-	_hum = "h" + str(int(round(hum)))
-	_press = "b" + str(int(10*round(press_nn,1)))
-	_id = " BME280"
-
-	WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
-	APRS.sendMsg(WxReport)
+			dt = datetime.datetime.now(timezone.utc)
+			_DHM = dt.strftime("@%d%H%Mz")
+			_pos = Config.POS[0] + "/" + Config.POS[1] 
+			_wind  = "_.../...g..."
+			_temp = "t" + str(int(round(_tempf,1)))
+			_rain = "r...p...P..."
+			_hum = "h" + str(int(round(hum)))
+			_press = "b" + str(int(10*round(press_nn,1)))
+			_id = " BME280"
+			WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
+			APRS.sendMsg(WxReport)
+		except :
+			Config.BME280="False"
+			logging.info("BME280 not available, disable WX-Timer")
 
 def aelapsedTime() :
 	end_time = time.time()
@@ -110,8 +113,9 @@ def main() :
 	webgui.start()
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
-		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx, "") 
-		logging.info("BME280 detected")
+		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx, "")
+		wxTimer.start() 
+		logging.info("BME280 detected, Timer started")
 
 	while(True) :
 		msg=LoraRx.loralib.recv()
@@ -133,9 +137,8 @@ def main() :
 			logging.info("Configuration reloaded")
 			Config.dirtyFlag = False
 
+
 	bcTimer.stop()
-	if (Config.BME280.lower() in ['true', '1', 'yes'] ) : 
-		wxTimer.stop() 
 	HMI.initdisplay()
 
 

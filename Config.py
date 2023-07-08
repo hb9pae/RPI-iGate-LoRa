@@ -20,8 +20,7 @@ __copyright__   = "Copyright 2023"
 __email__       = "hb9pae@gmail.com"
 
 Version = __version__
-myConfig = "/home/pi/RPI-iGate-LoRa/igate.ini"
-
+myConfig = os.path.dirname(os.path.abspath(__name__)) + "/igate.ini"
 Frequ   = 433775000
 SR      = 12
 
@@ -105,7 +104,7 @@ def getConfig(file) :
 		exit(1)
 
 def mkConfig(file) :
-		logging.warning("No Configfile found, create new one and exit Program")
+		logging.info("No Configfile found, create %s and exit Program" % (file))
 
 		# ---- Write Header to  Configfile 
 		now = datetime.datetime.now() 
