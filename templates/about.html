@@ -3,8 +3,12 @@
 {% block content %}
     <h3>{% block title %} Info {% endblock %}</h3>
     <pre>
-    Das  LoRa IGate (Internet Gateway) leitet alle gültigen LoRa APRS Positionspakete Pakete, die auf RF gehört werden, 
+    Das  LoRa IGate (Internet Gateway) leitet alle gültigen LoRa APRS Positionspakete, die auf 433.775 MHz gehört werden, 
     an das APRS-IS weiter. Im Gegensatz zu den üblichen AX25 APRS-IGates werden empfangenen Pakete nicht mehr über 
-    RF ausgestrahlt, d.h. der IGate arbeitet als reiner Empfänger. 
+    ausgestrahlt, d.h. der IGate arbeitet als reiner Empfänger. Diese Positionsmeldungen können anschliessend unter 
+    http://aprs.fi angezeigt werden.
+
+    Das Python Programm IGate.py steuert das LoRa RPI-Board der SWISS-ARTG mit dem RF95W Chip RF-Hope
+    als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  https://www.swiss-artg.ch/index.php?id=174
     </pre>
 {% endblock %}

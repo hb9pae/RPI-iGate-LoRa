@@ -103,6 +103,7 @@ def getConfig(file) :
 		return(dictionary)
 	else :
 		mkConfig(file)
+		print("No Configfile found, create %s and exit Program" % (file) )
 		exit(1)
 
 def mkConfig(file) :
@@ -110,13 +111,15 @@ def mkConfig(file) :
 
 		# ---- Write Header to  Configfile 
 		now = datetime.datetime.now() 
-		header1 = "# APRS iGate configuration\n"
+		header1 = "# Konfigurtation APRS iGate\n"
 		header2 = "# (c) hb9pae@gmail.com\n"
-		header3 = now.strftime("# Created: %d/%m/%Y %H:%M:%S\n")
+		header3 = "# Positionskoordinaten im Dezimalformat (LAT: Breitengrad,LON: Laengengrad)\n" 
+		header4 = now.strftime("# Erstellt: %d/%m/%Y %H:%M:%S\n")
 		f = open(file, "w")
 		f.writelines(header1)
 		f.writelines(header2)
 		f.writelines(header3)
+		f.writelines(header4)
 		f.close()
 
 		# ---- Write Configuration Template 
