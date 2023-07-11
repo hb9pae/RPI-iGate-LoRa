@@ -36,7 +36,7 @@ def gotPacket(buffer) :
 	Config.LastMsg=now.strftime("%Y-%m-%d, %H:%M:%S: ") + message
 	logging.info("RX Packet received Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR))
 	Config.RxCount +=1
-	addrend = message.find(":",5,20)
+	addrend = message.find(":",5,40)
 	# add iGate call to path
 	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
 	APRS.sendMsg(message)
