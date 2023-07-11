@@ -125,6 +125,7 @@ def main() :
 		if msg[5] == 0 and msg[1] > 0:
 			#pdb.set_trace()
 			LoraRx.gotPacket(msg)
+			HMI.display(3)  # display received Packaage
 		time.sleep(0.05) 
 
 		if (Config.Menu < 5) :

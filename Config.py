@@ -37,8 +37,8 @@ PktErr = 0
 # Message to APRS-IS
 MsgSent = 0
 
-PktRRSI = 0
-RRSI = 0
+PktRSSI = 0
+RSSI = 0
 SNR = 0
 
 
@@ -63,13 +63,6 @@ def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):
 
 # Umrechnen von Dezimal-Grad zu Grad-Minuten
 def grad2min(_lat, _lon) :
-	_lonGrad = int(abs(_lon))
-	_lonMin = 60.0 * (_lon - _lonGrad)
-	lonstr = f"{_lonGrad:d}{_lonMin:.2f}"
-	if (_lon > 0) :
-		lonstr = lonstr.zfill(8) + "E"
-	else :
-		lonstr = lonstr + "W"
 	_latGrad = int(abs(_lat))
 	_latMin = 60* (_lat - _latGrad)
 	latstr = f"{_latGrad:d}{_latMin:.2f}"
@@ -77,6 +70,15 @@ def grad2min(_lat, _lon) :
 		latstr = latstr.zfill(7) + "N"
 	else :
 		latstr = latstr + "S"
+
+	_lonGrad = int(abs(_lon))
+	_lonMin = 60.0 * (_lon - _lonGrad)
+	lonstr = f"{_lonGrad:d}{_lonMin:.2f}"
+	if (_lon > 0) :
+		lonstr = lonstr.zfill(8) + "E"
+	else :
+		lonstr = lonstr + "W"
+
 	return(latstr, lonstr)
 
 def setGlobals(_conf) :
@@ -121,7 +123,7 @@ def mkConfig(file) :
 		_conf=configparser.ConfigParser()
 		_conf["APRS-IS"] = {
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "Aprsis" : "False",\
-			"lon" : "47.53668", "lat" : "8.58164", "height" : "399",\
+			"lat" : "47.53668", "lon" : "8.58164", "height" : "399",\
 			"beaconinterval" : "600", "BeaconMessage" : "-", "BME280" : "False", "WxInterval" : "300"\
 			}
 		with open(file, 'a') as configfile:
