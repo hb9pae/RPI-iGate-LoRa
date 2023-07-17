@@ -82,7 +82,7 @@ def config() :
 		return redirect(url_for('status') )
 
 	#pdb.set_trace()
-	return render_template("config1.html", content = configlist )
+	return render_template("config.html", content = configlist )
 
 
 @app.route('/')
