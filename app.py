@@ -36,16 +36,17 @@ def elapsedTime() :
 
 def saveconfig(newconf) :
 	now = datetime.datetime.now() 
-	header1 = "# APRS iGate configuration\n# (c) hb9pae@gmail.com"
-	header2 = "# Laengengrad (LAT) 0 bis 90 Nord; 0 bis -90 Sued"
-	header3 = "# Breitengrad (LON) 0 bis 180 Ost; 0 bis -180 West"
-	header4 = now.strftime("# Created (app): %d/%m/%Y %H:%M:%S\n")
+	header1 = "# Konfiguration APRS iGate\n"
+	header2 = "# (c) hb9pae@gmail.com\n"
+	header3 = "# Positionskoordinaten im Dezimalformat (LAT: Breitengrad,LON: Laengengrad)\n" 
+	header4 = now.strftime("# Erstellt: %d/%m/%Y %H:%M:%S\n")
 	f = open(Config.myConfig, "w")
 	f.writelines(header1)
 	f.writelines(header2)
 	f.writelines(header3)
 	f.writelines(header4)
 	f.close()
+
 	#pdb.set_trace()
 	config = configparser.ConfigParser()
 	config["APRS"] = newconf
