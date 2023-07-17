@@ -37,10 +37,14 @@ def elapsedTime() :
 def saveconfig(newconf) :
 	now = datetime.datetime.now() 
 	header1 = "# APRS iGate configuration\n# (c) hb9pae@gmail.com"
-	header2 = now.strftime("# Created (app): %d/%m/%Y %H:%M:%S\n")
+	header2 = "# Laengengrad (LAT) 0 bis 90 Nord; 0 bis -90 Sued"
+	header3 = "# Breitengrad (LON) 0 bis 180 Ost; 0 bis -180 West"
+	header4 = now.strftime("# Created (app): %d/%m/%Y %H:%M:%S\n")
 	f = open(Config.myConfig, "w")
 	f.writelines(header1)
 	f.writelines(header2)
+	f.writelines(header3)
+	f.writelines(header4)
 	f.close()
 	#pdb.set_trace()
 	config = configparser.ConfigParser()
@@ -77,7 +81,8 @@ def config() :
 		return redirect(url_for('status') )
 
 	#pdb.set_trace()
-	return render_template("config.html", content = configlist )
+	return render_template("config1.html", content = configlist )
+
 
 @app.route('/')
 def status() :
@@ -85,16 +90,19 @@ def status() :
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
 		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
 			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
-			"Temperature":Config.Temperature, "AirPressure NN":Config.AirPressureNN, "Humidity":Config.Humidity," ":" ",
-			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "PktRSSI": Config.PktRSSI,
-			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MSGSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
+			"WX Sensor BME280":Config.BME280, 
+			"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
+			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
+			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
 			"Uptime": elapsedTime()
 		}
 	else : 
 		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
 			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
-			"Last Mssage":Config.LastMsg,"Current  RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI,
-			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount, "SNR": Config.SNR,
+			"WX Sensor BME280":Config.BME280, 
+			" - Temperatur":"---", " - Luftdruck":"---", " - Luftfeuchtigkeit":"---"," ":" ",
+			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
+			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
 			"Uptime": elapsedTime()
 		}
 
