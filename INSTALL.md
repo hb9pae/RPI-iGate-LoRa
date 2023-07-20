@@ -17,18 +17,24 @@ sudo apt install python3-dev
 sudo apt install libopenjp2-7-dev
 sudo apt install libtiff-dev
 
-sudo  python -m pip install --upgrade pip setuptools wheel
-sudo pip install Adafruit-SSD1306
-sudo python -m pip install --upgrade pip
-sudo python -m pip install --upgrade Pillow
+sudo  python3 -m pip install --upgrade pip setuptools wheel
+sudo pip3 install Adafruit-SSD1306
+sudo python3 -m pip install --upgrade pip
+sudo python3 -m pip install --upgrade Pillow
 
-sudo pip install smbus2
-sudo pip install loralib
-sudo pip install aprslib
-sudo pip install flask
+python3 -m venv /opt/venv-lora
+
+sudo pip3 install smbus2
+sudo pip3 install loralib
+sudo pip3 install aprslib
+sudo pip3 install flask
+
+sudo pip3 install RPi.GPIO
+sudo pip3 install Pillow
+
 
 wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
-	sudo dpkg -i wiringpi-2.61-1-armhf.deb
+sudo dpkg -i wiringpi-2.61-1-armhf.deb
 
 raspi-config 
 - ssh enable

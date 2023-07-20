@@ -8,7 +8,7 @@
 
 #set -x
 
-LoraRoot="./"
+LoraRoot="/opt/"
 LoraSrc="https://github.com/hb9pae/RPI-iGate-LoRa.git"
 LoraHome="$LoraRoot/lorapy"
 
