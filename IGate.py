@@ -50,7 +50,7 @@ class RepeatedTimer(object):
 		self.is_running = False
 
 def sendBeacon() :
-	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "/" + Config.POS[1] + "& " + Config.INFO + " " + str(Config.RxCount) 
+	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
 def sendWx(_txt) :
