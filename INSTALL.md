@@ -1,63 +1,72 @@
-Installation iGate 
-------------------
+#  Installation iGate 
 
-2023-06-15
-2023-07-07, hb9pae
+Autor: hb9pae@gamail.com
+Revision: 2023-06-15, 2023-07-07, 2023-07-20
 
-sudo apt update
-sudo apt upgrade
-sudo apt install git
+## Voraussetzungen
+Diese Installatiuonsanleitung basiert auf: 
+.   Raspberry PI Modell 3 oder 4
+-   Raspbian GNU/Linux 11 (bullseye)  (32 Bit / Raspian OS lite)
+-   Python Version 3.9
+-   LoRa iGate Aufsteckboard swiss-artg.ch
+-   Erstelle eine SD-Karte (> 8 GB) mit einem Benutzer "pi" und erlaube den Zugriff über SSH 
 
-echo "alias python=/usr/bin/python3" >> ~/.bashrc
-source ~/.bashrc
+##  Installation 
+Installiere folgende Pakete als root:
+-   sudo apt update
+-   sudo apt upgrade
+-   sudo apt install git
+-   sudo apt install python3-pip
+-   sudo apt install python3-dev 
+-   sudo apt install libopenjp2-7-dev
+-   sudo apt install libtiff-dev
 
+### Python3 Pakete (werden als Benutzer pi installiert) 
+-   pip3 install smbus2
+-   pip3 install loralib
+-   pip3 install aprslib
+-   pip3 install flask
+-	pip3 install Pillow
+-	pip3 install Adafruit-SSD1306
 
-sudo apt install python3-pip
-sudo apt install python3-dev 
-sudo apt install libopenjp2-7-dev
-sudo apt install libtiff-dev
+###  Installation der Python-Programme und setzen der Berechtigungen
+Die Python Sourcen werden im Verzeichnis "/opt" installiert. 
+-   sudo chmod 777 /opt/            # Erlaube Lese- und Schreib-Zugriff für alle User  
+-   sudo usermod -aG adm pi 		# Erlaube Lese- und Schreib-Zugriff im Verzeichnis </var/log> 
 
-sudo  python3 -m pip install --upgrade pip setuptools wheel
-sudo pip3 install Adafruit-SSD1306
-sudo python3 -m pip install --upgrade pip
-sudo python3 -m pip install --upgrade Pillow
+Wir installieren nun Wiring PI
+-   cd /opt
+-   wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
+-   sudo dpkg -i wiringpi-2.61-1-armhf.deb
 
-python3 -m venv /opt/venv-lora
+Wir installieren nun die Python Programme:
+-   cd /opt
+-   git clone https://github.com/hb9pae/RPI-iGate-LoRa.git
 
-sudo pip3 install smbus2
-sudo pip3 install loralib
-sudo pip3 install aprslib
-sudo pip3 install flask
+### Konfiguration Raspberry PI Interface
+Folgende  RPI Interface
+-   sudo raspi-config 
+        ssh enable
+        i2c enable 
+        spi enable
+        serial interface enable
+-	sudo reboot  
 
-sudo pip3 install RPi.GPIO
-sudo pip3 install Pillow
-
-
-wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
-sudo dpkg -i wiringpi-2.61-1-armhf.deb
-
-raspi-config 
-- ssh enable
-- i2c enable 
-- spi enable
-- serial enable
-	
-sudo chmod 777 /var/log/
-
-git clone https://github.com/hb9pae/RPI-iGate-LoRa.git
-
-cd RPI-iGate-LoRa
+### Kompiliere und Test der Library
+cd /opt/RPI-iGate-LoRa
 cd LORA
 	Kontrolliere/passe die  aktuelle Python Version im Makefile an:
 	Python Version 3.9 
 
 	make clean
 	male all
+
 	
-Test Library:	
 ./lora_app.exe test
 
-hb9pae@LORAGW:~/RPI-iGate-LoRa/LORA $ ./lora_app.exe test
+```
+$ ./lora_app.exe test
+
 SX1276 detected, starting.
 Print Register 
 Version: 0x12
@@ -86,9 +95,8 @@ PayLoad LNG: 0x80
 Hop Period: 0xff
 Sync Word: 0x12
 Version: 0x12
--------------
+```
 
-cp loralib.so ../
-
--------------
+Wir kopieren die Library in das Programmverzeichnis:
+	cp loralib.so ../
 
