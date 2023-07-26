@@ -18,8 +18,8 @@ import logging
 
 app = Flask(__name__)
 app.logger.removeHandler(default_handler)
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+#log = logging.getLogger('werkzeug')
+#log.setLevel(logging.ERROR)
 
 def  run(ip) :
 	 app.run(ip, debug=False)
@@ -85,7 +85,7 @@ def config() :
 	return render_template("config.html", content = configlist )
 
 
-@app.route('/')
+@app.route('/status')
 def status() :
 	#pdb.set_trace()
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
@@ -107,7 +107,7 @@ def status() :
 			"Uptime": elapsedTime()
 		}
 
-	return render_template("index.html", content = varlist )
+	return render_template("status.html", content = varlist )
 
 
 @app.route('/about/')
@@ -115,10 +115,16 @@ def about() :
 	#pdb.set_trace()
 	return render_template('about.html')
 
+@app.route('/')
+def wx() :
+	#pdb.set_trace()
+	wxlist = [11, 22, 1000]
+	return render_template('wx.html', content = wxlist)
+
 
 if __name__ == '__main__':
 #	x = threading.Thread(target=run, args=(1,))
 #	x.start()
 #	while 1 :
 #		time.sleep(10)
-	run("192.168.0.145")
+	run("192.168.0.53")

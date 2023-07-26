@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %} Wetter {% endblock %}
+
+{% block head %}
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+ 	var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['°C', {{ content[0] }} ]
+        ]);
+
+        var options = {
+	  min: -40, max: 40,
+          width: 200, height: 200,
+          majorTicks: ["-40", "-30","-20","-10","0","10","20","30","40"], minorTicks: 2
+	  
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('temp_div')); 
+	chart.draw(data, options);
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['%', {{ content[1] }} ]
+        ]);
+
+        var options = {
+          width: 200, height: 200,
+	  min: 0, max: 100,
+	  majorTicks: ["0", "10","20","30","40","50","60","70","80","90", "100"], minorTicks: 2
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('hyd_div'));
+        chart.draw(data, options);
+
+        var data = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['hPa', {{ content[2] }} ]
+        ]);
+
+        var options = {
+          width: 200, height: 200,
+	  min: 950, max: 1030,
+	  majorTicks: ["950", "960","970","980", "990", "1000", "1010","1020","1030"], minorTicks: 2
+        };
+
+        var chart = new google.visualization.Gauge(document.getElementById('baro_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid mt-3">
+	<h1> Wetter </h1>
+
+   <table  align="center">
+    <tr>
+     <td> <div id="temp_div" style="width: 260px; height: 200px;"></div> </td>
+     <td> <div id="hyd_div" style="width: 260px; height: 200px;"></div> </td>
+     <td> <div id="baro_div" style="width: 260px; height: 200px;"></div> </td>
+    <tr>	
+   </table>	
+
+   <div id="text1" style="width: 400px; height: 300px;"></div> </td>
+   </div>
+	
+ </div>
+
+{% endblock %}
+

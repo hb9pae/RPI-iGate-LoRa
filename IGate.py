@@ -146,8 +146,8 @@ def main() :
 
 if __name__ == "__main__":
 	warnings.filterwarnings("ignore", category=DeprecationWarning)
-	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
-	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+	#logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+	logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 	logging.info("IGate startup")
 	init()
 	main()
