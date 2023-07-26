@@ -13,8 +13,6 @@
 </head>
 <body>
 
-<div class="container-fluid mt-3">
-    <h3> LoRa APRS iGate </h3><p>
 </div>
 
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
@@ -47,6 +45,8 @@
 
 <div class="container-fluid mt-3">
 
+<h3> {% block header %}   {% endblock %} - LoRa APRS-iGate </h3>
+  
  {% block content %} {% endblock %}
 
 </div>
