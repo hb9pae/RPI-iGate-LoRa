@@ -53,7 +53,7 @@ def sendBeacon() :
 	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
-def sendWx(_txt) :
+def sendWx() :
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
 		try :
 			_altitude = int(Config.HEIGHT)
@@ -62,9 +62,10 @@ def sendWx(_txt) :
 			_altitude = 400
 		try :
 			(temp, press_nn, hum) = BME280.getBME280(_altitude)
-			Config.Temperature = temp
-			Config.AirPressureNN = press_nn
-			Config.Humidity = hum
+			Config.Temperature = round(temp,2)
+			Config.AirPressureNN = round(press_nn,1)
+			Config.Humidity = round(hum,1)
+			Config.WxData = True
 			_tempf = (temp * 1.8) + 32 # APRS benötigt Farenheit 
 			#pdb.set_trace()
 
@@ -114,7 +115,8 @@ def main() :
 	webgui.start()
 
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
-		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx, "")
+		sendWx()
+		wxTimer = RepeatedTimer(int(Config.WXINTERVAL), sendWx)
 		wxTimer.start() 
 		logging.info("BME280 detected, Timer started")
 

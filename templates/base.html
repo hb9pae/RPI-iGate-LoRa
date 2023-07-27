@@ -25,10 +25,10 @@
         <a class="nav-link">&nbsp;</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('wx') }}"><h4>Wetter</h4></a>
+        <a class="nav-link" href="{{ url_for('status') }}"><h4>Status</h4></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('status') }}"><h4>Status</h4></a>
+        <a class="nav-link" href="{{ url_for('wx') }}"><h4>Wetter</h4></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('log') }}"><h4>Logfile</h4></a>
@@ -51,9 +51,21 @@
 
 </div>
   <footer id="sticky-footer" class="flex-shrink-0 py-2 bg-primary text-white-50">
-    <div class="container text-center">
-      <small>Copyright &copy; hb9pae@swiss-artg.ch</small>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      {{ ds }}
     </div>
+    <div class="col-sm-4">
+      Copyright &copy; hb9pae@swiss-artg.ch
+    </div>
+    <div class="col-sm-4">
+      &nbsp;
+    </div>
+  </div>
+</div>
+
   </footer>
 
     <!-- Optional JavaScript -->

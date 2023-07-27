@@ -7,6 +7,7 @@ import Config
 import threading
 import subprocess 
 import time
+from datetime import datetime
 
 from flask.logging import default_handler
 import logging
@@ -21,7 +22,10 @@ app.logger.removeHandler(default_handler)
 #log = logging.getLogger('werkzeug')
 #log.setLevel(logging.ERROR)
 
-def  run(ip) :
+def datestring() :
+	return (datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+
+def run(ip) :
 	 app.run(ip, debug=False)
 
 def elapsedTime() :
@@ -59,7 +63,7 @@ def log() :
 	res = subprocess.run(cmd, capture_output=True, text=True)
 	out = res.stdout.split("\n")
 	#pdb.set_trace()
-	return render_template("log.html", content = out )
+	return render_template("log.html", content = out)
 
 
 @app.route("/config/",  methods=['GET', 'POST'] )
@@ -82,10 +86,14 @@ def config() :
 		return redirect(url_for('status') )
 
 	#pdb.set_trace()
-	return render_template("config.html", content = configlist )
+	return render_template("config.html", content = configlist, ds = datestring())
 
 
-@app.route('/status')
+@app.route('/')
+#def index() :
+#	return redirect(url_for('status')) 
+#
+#@app.route('/status')
 def status() :
 	#pdb.set_trace()
 	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
@@ -95,7 +103,7 @@ def status() :
 			"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
 			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
 			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
-			"Uptime": elapsedTime()
+			"Uptime": elapsedTime(), "Wx-Data": Config.WxData
 		}
 	else : 
 		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
@@ -104,22 +112,26 @@ def status() :
 			" - Temperatur":"---", " - Luftdruck":"---", " - Luftfeuchtigkeit":"---"," ":" ",
 			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
 			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
-			"Uptime": elapsedTime()
+			"Uptime": elapsedTime(), "Wx-Data": Config.WxData
 		}
 
-	return render_template("status.html", content = varlist )
-
+	return render_template("status.html", content = varlist, ds = datestring())
 
 @app.route('/about/')
 def about() :
 	#pdb.set_trace()
-	return render_template('about.html')
+	return render_template('about.html', ds = datestring())
 
-@app.route('/')
+@app.route('/wx/')
 def wx() :
 	#pdb.set_trace()
-	wxlist = [11, 22, 1000]
-	return render_template('wx.html', content = wxlist)
+	wxlist = [Config.Temperature, Config.Humidity, Config.AirPressureNN]
+	if (Config.WxData) :
+		wx = "Show"
+	else :	
+		wx = "Hide"
+	return render_template('wx.html', content = wxlist, WxData = wx, ds = datestring())
+	#pdb.set_trace()
 
 
 if __name__ == '__main__':

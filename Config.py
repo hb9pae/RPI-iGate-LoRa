@@ -27,6 +27,7 @@ SR      = 12
 StartTime = datetime.datetime.now()
 DisplayTimeout = 60
 
+WxData = False
 Temperature = 1.0
 AirPressureNN = 1.0
 Humidity = 1.0
