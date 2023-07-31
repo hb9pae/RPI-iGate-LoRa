@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
+{% block header %} Status {% endblock %}
+
 {% block content %}
-    <h3>{% block title %} Status {% endblock %}</h3>
 	<table>
 	{% for key, value in content.items() %}
 		<tr>

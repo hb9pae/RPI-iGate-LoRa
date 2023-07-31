@@ -14,7 +14,7 @@ import re
 import datetime
 
 
-__version__     = "0.0.3"
+__version__     = "0.0.5"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2023"
 __email__       = "hb9pae@gmail.com"
@@ -27,16 +27,20 @@ SR      = 12
 StartTime = datetime.datetime.now()
 DisplayTimeout = 60
 
+# Auslesen BME280
+EN_WXDATA = False
+BMEINTERVAL = 300
+WXINTERVAL = 300
 Temperature = 1.0
 AirPressureNN = 1.0
 Humidity = 1.0
 
+# LORA
 LastMsg = "--- None ---"
 RxCount = 0
 PktErr = 0
 # Message to APRS-IS
 MsgSent = 0
-
 PktRSSI = 0
 RSSI = 0
 SNR = 0
@@ -46,15 +50,16 @@ SNR = 0
 CALL = "NOCALL"
 PASSCODE = ""
 INFO = "" 
-APRSIS = False
+EN_APRSIS = False
 LON = 0.0
 LAT = 0.0
 HEIGHT = 0
 BEACONINTERVAL = 600
-BEACONMESSAGE = ""
-BME280 = False
-WXINTERVALL = 300
+BEACONMESSAGE = "-"
+EN_BME280 = False
 
+dirtyFlag = False
+reboot = False
 
 # Test auf ungültige Zeichen
 def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):
@@ -87,7 +92,14 @@ def setGlobals(_conf) :
 	#pdb.set_trace()
 	for section in _conf :
 		for key in _conf[section] :
-			globals()[key.upper()] = _conf[section][key]
+			varname =  _conf[section][key]
+			#pdb.set_trace()
+			if (key.lower().startswith("en_") ):
+				if (varname.lower() in [ "true", "1", "y", "yes"] ) :
+					varname = True
+				else :
+					varname = False
+			globals()[key.upper()] = varname
 		POS = grad2min(float(LAT), float(LON) )
 
 def getConfig(file) :
@@ -99,7 +111,6 @@ def getConfig(file) :
 			dictionary[section] = {}
 			for option in config.options(section):
 				dictionary[section][option] = config.get(section, option)
-		#print("getConfig()")
 		return(dictionary)
 	else :
 		mkConfig(file)
@@ -125,9 +136,10 @@ def mkConfig(file) :
 		# ---- Write Configuration Template 
 		_conf=configparser.ConfigParser()
 		_conf["APRS-IS"] = {
-			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "Aprsis" : "False",\
-			"lat" : "47.53668", "lon" : "8.58164", "height" : "399",\
-			"beaconinterval" : "600", "BeaconMessage" : "-", "BME280" : "False", "WxInterval" : "300"\
+			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
+			"Lat" : "47.53668", "Lon" : "8.58164", "height" : "399",\
+			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\
+			"EN_WxData" : "False", "WxInterval" : "300"
 			}
 		with open(file, 'a') as configfile:
 			_conf.write(configfile)
@@ -136,6 +148,8 @@ def mkConfig(file) :
 def main() :
 	myconf = getConfig("test.ini")
 	setGlobals(myconf)
+	pdb.set_trace()
+
 
 
 if __name__ == "__main__":
