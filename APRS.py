@@ -13,7 +13,7 @@ def init() :
 	Config.AprsStat = "Not active"
 
 def sendMsg( msg ) :
-	if (Config.APRSIS.lower() in ['true', '1', 'yes'] ) :
+	if (Config.EN_APRSIS) :
 		AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
 		AIS.connect()
 		AIS.sendall(msg)
@@ -21,7 +21,7 @@ def sendMsg( msg ) :
 		Config.AprsStat = "Active"
 		Config.MsgSent +=1
 	else :
-		logging.info("APRS-IS upload: %s",  Config.APRSIS)
+		logging.info("APRS-IS upload: %s",  Config.EN_APRSIS)
 		Config.AprsStat = "Test"
 	Config.LastPkt = msg
 	logging.info("APRS Packet sent: %s" , msg)

@@ -1,12 +1,12 @@
 
 from  flask import Flask, render_template, request, url_for, flash, redirect, jsonify
-import datetime, time
+import time
 import pdb
 import configparser, json
 import Config
 import threading
 import subprocess 
-import time
+import os, sys
 from datetime import datetime
 
 from flask.logging import default_handler
@@ -19,11 +19,19 @@ import logging
 
 app = Flask(__name__)
 app.logger.removeHandler(default_handler)
-#log = logging.getLogger('werkzeug')
-#log.setLevel(logging.ERROR)
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+def isdirty() :
+	if Config.dirtyFlag :
+		_dirty = "True"
+	else :
+		_dirty = "False"
+	return(_dirty)
 
 def datestring() :
-	return (datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+	now = datetime.now()
+	return (now.strftime('%Y-%m-%d %H:%M:%S'))
 
 def run(ip) :
 	 app.run(ip, debug=False)
@@ -39,11 +47,10 @@ def elapsedTime() :
 
 
 def saveconfig(newconf) :
-	now = datetime.datetime.now() 
 	header1 = "# Konfiguration APRS iGate\n"
 	header2 = "# (c) hb9pae@gmail.com\n"
 	header3 = "# Positionskoordinaten im Dezimalformat (LAT: Breitengrad,LON: Laengengrad)\n" 
-	header4 = now.strftime("# Erstellt: %d/%m/%Y %H:%M:%S\n")
+	header4 = "# " + datestring() + "\n"
 	f = open(Config.myConfig, "w")
 	f.writelines(header1)
 	f.writelines(header2)
@@ -63,7 +70,14 @@ def log() :
 	res = subprocess.run(cmd, capture_output=True, text=True)
 	out = res.stdout.split("\n")
 	#pdb.set_trace()
-	return render_template("log.html", content = out)
+	return render_template("log.html", content = out, ds = datestring(), dirty=isdirty())
+
+
+@app.route("/reboot")
+def reboot() :
+	Config.reboot = True
+	Config.dirtyFlag = False
+	return redirect(url_for('status') )
 
 
 @app.route("/config/",  methods=['GET', 'POST'] )
@@ -77,60 +91,46 @@ def config() :
 
 	if request.method == "POST" :
 		myconfig = request.form.to_dict()
+		#pdb.set_trace()
 		saveconfig(myconfig)
 
 		myconf = Config.getConfig(Config.myConfig)
 		Config.setGlobals(myconf)
-
+		#pdb.set_trace()
 		Config.dirtyFlag = True
 		return redirect(url_for('status') )
-
-	#pdb.set_trace()
-	return render_template("config.html", content = configlist, ds = datestring())
-
+	return render_template("config.html", content = configlist, ds = datestring(), dirty = isdirty() )
 
 @app.route('/')
-#def index() :
-#	return redirect(url_for('status')) 
-#
-#@app.route('/status')
 def status() :
 	#pdb.set_trace()
-	if (Config.BME280.lower() in ['true', '1', 'yes'] ) :
-		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
-			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
-			"WX Sensor BME280":Config.BME280, 
-			"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
-			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
-			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
-			"Uptime": elapsedTime(), "Wx-Data": Config.WxData
-		}
-	else : 
-		varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.APRSIS, " ":" ",
-			"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
-			"WX Sensor BME280":Config.BME280, 
-			" - Temperatur":"---", " - Luftdruck":"---", " - Luftfeuchtigkeit":"---"," ":" ",
-			"Last Mssage":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
-			"Packet Err": Config.PktErr, "APRS-IS messages": Config.MsgSent,"RX Count": Config.RxCount,
-			"Uptime": elapsedTime(), "Wx-Data": Config.WxData
-		}
+	varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.EN_APRSIS, " ":" ",
+		"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
+		"Sensor BME280":Config.EN_BME280, "BME280 Intervall": Config.BMEINTERVAL, 
+		"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
+		"Last Message":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
+		"Packet Err": Config.PktErr, "APRS-IS Message": Config.MsgSent,"RX Count": Config.RxCount,
+		"Wx-Data": Config.EN_WXDATA, "WX Intervall" : Config.WXINTERVAL,
+		"Beacon Intervall": Config.BEACONINTERVAL, "Beacon Message": Config.BEACONMESSAGE, "Uptime": elapsedTime(), 
+		"Version" : Config.Version, "DirtyFlag": Config.dirtyFlag
+	}
 
-	return render_template("status.html", content = varlist, ds = datestring())
+	return render_template("status.html", content = varlist, ds = datestring(), dirty = isdirty())
 
 @app.route('/about/')
 def about() :
 	#pdb.set_trace()
-	return render_template('about.html', ds = datestring())
+	return render_template('about.html', ds = datestring(), dirty = isdirty())
 
 @app.route('/wx/')
 def wx() :
 	#pdb.set_trace()
 	wxlist = [Config.Temperature, Config.Humidity, Config.AirPressureNN]
-	if (Config.WxData) :
+	if (Config.EN_WXDATA) :
 		wx = "Show"
 	else :	
 		wx = "Hide"
-	return render_template('wx.html', content = wxlist, WxData = wx, ds = datestring())
+	return render_template('wx.html', content = wxlist, WxData = wx, ds = datestring(), dirty = isdirty())
 	#pdb.set_trace()
 
 
@@ -139,4 +139,4 @@ if __name__ == '__main__':
 #	x.start()
 #	while 1 :
 #		time.sleep(10)
-	run("192.168.0.53")
+	run("0.0.0.0")

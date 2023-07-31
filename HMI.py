@@ -47,6 +47,7 @@ def call_sw(channel):
 	#print(Config.Menu)
 
 def initbutton() :
+	#GPIO.cleanup(GPIO.BCM)
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup([21, 20, 16, 19, 26], GPIO.IN)
 
@@ -138,7 +139,7 @@ def display(page) :
 		draw.text((4, 4),	"Call:   " + Config.CALL, font=font1, fill=255)
 		draw.text((4, 13),	"Position: " + str(Config.LAT) + "/" + str(Config.LON),  font=font1, fill=255)
 		draw.text((4, 22),	"Altitude: " + str(Config.HEIGHT),  font=font1, fill=255)
-		draw.text((4, 31),	"BME280:   " + str(Config.BME280),  font=font1, fill=255)
+		draw.text((4, 31),	"EN-BME280:   " + str(Config.EN_BME280),  font=font1, fill=255)
 
 	elif (page == 3) :		# PACKET
 		draw.rectangle((x+90, y, x1+90, y1), outline=255, fill=255)
