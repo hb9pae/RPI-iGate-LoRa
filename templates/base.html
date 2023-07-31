@@ -40,6 +40,12 @@
         <a class="nav-link" href="{{ url_for('about') }}"><h4>Info</h4></a>
       </li>
     </ul>
+{% if dirty == "True"%}
+      <li class="mx.auto">
+	<a class="navbar-brand "href="/reboot">RESTART iGate</a>
+      </li>
+{% endif %}
+
   </div>
 </nav>
 
@@ -54,13 +60,13 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-4 h6">
       {{ ds }}
     </div>
     <div class="col-sm-4">
       Copyright &copy; hb9pae@swiss-artg.ch
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4 h6">
       &nbsp;
     </div>
   </div>
