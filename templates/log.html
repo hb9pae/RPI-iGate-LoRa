@@ -3,12 +3,10 @@
 {% block header %} Logfile {% endblock %}
 
 {% block content %}
-	<p style="line-height: 50%">
-       <pre>
+	<p style="line-height: 120%">
 	{% for each in content %}
-	{{ each }}  
+		{{ each }}<br>  
 	{% endfor %}
-	</pre>
 	</p>
 
 {% endblock %}

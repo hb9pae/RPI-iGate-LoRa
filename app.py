@@ -13,10 +13,6 @@ from flask.logging import default_handler
 import logging
 
 
-#parameterfile= "./igate.ini"
-# https://www.digitalocean.com/community/tutorials/how-to-use-templates-in-a-flask-application
-# https://stackoverflow.com/questions/29547200/how-to-get-a-python-dict-into-an-html-template-using-flask-jinja2
-
 app = Flask(__name__)
 app.logger.removeHandler(default_handler)
 log = logging.getLogger('werkzeug')
@@ -66,7 +62,9 @@ def saveconfig(newconf) :
 
 @app.route("/log/",  methods=['GET', 'POST'] )
 def log() :
-	cmd = ("tail", "-100", "/var/log/iGate.log")
+	myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
+	#pdb.set_trace()
+	cmd = ("tail", "-100", myLog)
 	res = subprocess.run(cmd, capture_output=True, text=True)
 	out = res.stdout.split("\n")
 	#pdb.set_trace()

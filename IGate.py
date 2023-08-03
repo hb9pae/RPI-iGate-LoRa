@@ -25,6 +25,8 @@ import warnings
 import subprocess
 import RPi.GPIO as GPIO
 
+myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
+
 class RepeatedTimer(object):
 	def __init__(self, interval, function, *args, **kwargs):
 		self._timer     = None
@@ -51,11 +53,12 @@ class RepeatedTimer(object):
 		self.is_running = False
 
 def sendBeacon() :
-	logging.info("Send Beacon")
+	logging.info("Send iGate Beacon")
 	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
 def getBME280() :
+	#pdb.set_trace()
 	if (Config.EN_BME280) :
 		logging.info("Read BME280")
 
@@ -64,29 +67,36 @@ def getBME280() :
 		except:
 			logging.info("Wrong Altitude format, assume 400m asl")
 			_altitude = 400
+
 		try :
 			(temp, press_nn, hum) = BME280.getBME280(_altitude)
 			Config.Temperature = round(temp,2)
 			Config.AirPressureNN = round(press_nn,1)
 			Config.Humidity = round(hum,1)
-			WxReport()
 		except :
 			Config.EN_BME280 = False
 			Config.EN_WXDATA = False
-			logging.info("BME280 not available, disable BME280 and WX-DATA")
+			logging.info("1 BME280 not available, disable BME280 and WX-DATA")
+
+
+	else : 
+			Config.EN_BME280 = False
+			Config.EN_WXDATA = False
+			logging.info("2 BME280 not available, disable BME280 and WX-DATA")
 
 def WxReport() :
+	getBME280()
 	if (Config.EN_WXDATA) :
-		logging.info("Send WxReport")
+		logging.info("Prepare WxReport")
 		dt = datetime.datetime.now(timezone.utc)
 		_DHM = dt.strftime("@%d%H%Mz")
 		_pos = Config.POS[0] + "/" + Config.POS[1] 
 		_wind  = "_.../...g..."
-		_tempf = (temp * 1.8) + 32 # APRS benötigt Farenheit 
+		_tempf = (Config.Temperature * 1.8) + 32 # APRS benötigt Farenheit 
 		_temp = "t" + str(int(round(_tempf,1)))
 		_rain = "r...p...P..."
-		_hum = "h" + str(int(round(hum)))
-		_press = "b" + str(int(10*round(press_nn,1)))
+		_hum = "h" + str(int(round(Config.Humidity)))
+		_press = "b" + str(int(10*round(Config.AirPressureNN,1)))
 		_id = " BME280"
 		WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
 		APRS.sendMsg(WxReport)
@@ -118,11 +128,11 @@ def init() :
 	if (Config.EN_BME280) :
 		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), getBME280 ) 
 		BMETimer.start() 
+		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
 
 		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WxReport ) 
 		WxTimer.start()
-
-		logging.info("BME280 enabled, Timer started")
+		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
 
 	webgui = threading.Thread(target=app.run, args=("0.0.0.0",))
 	webgui.start()
@@ -132,7 +142,7 @@ def init() :
 
 def main() :
 	warnings.filterwarnings("ignore", category=DeprecationWarning)
-	logging.basicConfig(filename="/var/log/iGate.log", level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+	logging.basicConfig(filename=myLog, level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 	logging.info("IGate startup")
 	init()
@@ -145,7 +155,7 @@ def main() :
 			#pdb.set_trace()
 			LoraRx.gotPacket(msg)
 			HMI.display(3)  # display received Packaage
-		time.sleep(0.05) 
+		time.sleep(0.1) 
 
 		if (Config.Menu < 5) :
 			HMI.display(Config.Menu)

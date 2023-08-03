@@ -1,7 +1,7 @@
 #  Installation iGate 
 
 Autor: hb9pae@gamail.com
-Revision: 2023-06-15, 2023-07-07, 2023-07-20
+Revision: 2023-06-15, 2023-07-07, 2023-07-20, 2023-08-01
 
 ## Voraussetzungen
 Diese Installatiuonsanleitung basiert auf: 
@@ -32,7 +32,8 @@ Installiere folgende Pakete als root:
 ###  Installation der Python-Programme und setzen der Berechtigungen
 Die Python Sourcen werden im Verzeichnis "/opt" installiert. 
 -   sudo chmod 777 /opt/            # Erlaube Lese- und Schreib-Zugriff für alle User  
--   sudo usermod -aG adm pi 		# Erlaube Lese- und Schreib-Zugriff im Verzeichnis </var/log> 
+-   sudo usermod -aG adm pi		# Erlaube Lese- und Schreib-Zugriff im Verzeichnis </var/log> 
+-   sudo chmod 777 /var/log		# Erlaube LEse und Schreibberechtigung Verzeichnis </var/log>
 
 Wir installieren nun Wiring PI
 -   cd /opt
@@ -99,4 +100,19 @@ Version: 0x12
 
 Wir kopieren die Library in das Programmverzeichnis:
 	cp loralib.so ../
+
+### Systemdiesnte
+Installiere folgende Systemdienste:
+
+- Startscript: 
+sudo cp utils/igate.service  /etc/systemd/system
+sudo systemctl enable igate.service
+sudo systemctl start igate.service
+
+- LogRotate
+sudo cp utils/igate  /etc/logrotate.d/
+
+
+
+
 

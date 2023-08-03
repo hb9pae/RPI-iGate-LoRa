@@ -14,7 +14,7 @@ import re
 import datetime
 
 
-__version__     = "0.0.5"
+__version__     = "0.9.0"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2023"
 __email__       = "hb9pae@gmail.com"
@@ -93,8 +93,8 @@ def setGlobals(_conf) :
 	for section in _conf :
 		for key in _conf[section] :
 			varname =  _conf[section][key]
-			#pdb.set_trace()
 			if (key.lower().startswith("en_") ):
+				#pdb.set_trace()
 				if (varname.lower() in [ "true", "1", "y", "yes"] ) :
 					varname = True
 				else :
@@ -114,8 +114,8 @@ def getConfig(file) :
 		return(dictionary)
 	else :
 		mkConfig(file)
-		print("No Configfile found, create %s and exit Program" % (file) )
-		exit(1)
+		print("No Configfile found, create %s and Reboot" % (file) )
+		os.system('sudo reboot')
 
 def mkConfig(file) :
 		logging.info("No Configfile found, create %s and exit Program" % (file))

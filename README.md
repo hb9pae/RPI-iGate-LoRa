@@ -1,4 +1,4 @@
-README.md, 2023-06-27, hb9pae
+README.md, 2023-08-01, hb9pae
 
 #	Copyright
 (c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch
@@ -10,6 +10,9 @@ Der LoRa APRS-iGate empfängt LoRa APRS-Positionssignale und leitet diese an das
 APRS-Datenbank weiter. Diese Positionsmeldungen können anschliessend unter http://aprs.fi 
 angezeigt werden. 
 
+Der aktuelle Status sowie die empfangenen Daten werden im Status-Report angezeigt. Der 
+Status-Report kann mit einem Webbrwser unter <IP>:5000   (http://192.168,0.123:5000)  abgerufen werden.
+ 
 Das Python Programm IGate.py steuert das LoRa RPI-Board der SWISS-ARTG mit dem RF95W Chip RF-Hope
 als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  https://www.swiss-artg.ch/index.php?id=174
 
@@ -30,6 +33,16 @@ mit einem Imager-Programm (z.B. Raspberry Pi Imager) auf eine SD-Karte (mind. 8 
 Nach dem ersten Start des Raspberry PI wird das Filesystem auf der SD-Karte expandiert, es 
 folgen mehrere Restarts. Nach dem erfolgreichen Start des Programmes erscheint der Welcome-Bildschirm 
 auf dem OLED-Display.
+
+##	Konfiguration
+Die Konfiguration des Programmes erfolgt über eine Webbrowser auf der Adresse <IP>:5000
+Trage deine personlichen Daten im Konfigurations-Formular ein und speichere  die Daten ab.
+Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.ini abgespeichert.
+
+### 	Spezielle Parameter 
+	- EN_APRSIS:	True / False	Bestimmt, ob die iGate -DAten an das APRS-IS System übermittelt werden.
+	- EN_BME280	True / False	BME280 Sensor angeschlossen?
+	- EN_WXDATA	True / False	Bestimmt ob die BME280 Sensordaten als WX-Bake an das APRS-IS geleifert werden.
 
 ## 	Bedienung
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode

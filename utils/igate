@@ -1,0 +1,9 @@
+/opt/RPI-iGate-LoRa/iGate.log {
+	daily
+	rotate 10
+	compress
+	delaycompress
+	missingok
+	notifempty
+	copytruncate
+}
