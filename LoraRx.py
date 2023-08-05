@@ -27,7 +27,7 @@ def wx(name):
 
 def gotPacket(buffer) :
 	now = datetime.now() 
-	logging.info("RX Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (buffer[1], buffer[2], buffer[3], buffer[4]) )
+	logging.debug("RX Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (buffer[1], buffer[2], buffer[3], buffer[4]) )
 	Config.PktRSSI = buffer[2]
 	Config.RSSI = buffer[3]
 	Config.SNR = buffer[4]
@@ -44,21 +44,9 @@ def gotPacket(buffer) :
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)
 	Config.RxCount =0
-	logging.info("LoRa RX init done")
+	logging.debug("LoRa RX init done")
 #	pdb.set_trace()
 
-
-def main() :
-	try:
-		while(1) :
-			msg=loralib.recv()
-			if msg[5] == 0 and msg[1] > 0:
-				gotPacket(msg)
-			time.sleep(0.05) # your long-running job goes here...
-
-	finally:
-		bcTimer.stop() 
-		wxTimer.stop() 
 
 if __name__ == "__main__":
 	init()

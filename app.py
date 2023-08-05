@@ -62,7 +62,7 @@ def saveconfig(newconf) :
 
 @app.route("/log/",  methods=['GET', 'POST'] )
 def log() :
-	myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
+	myLog =  "/var/log/iGate.log"
 	#pdb.set_trace()
 	cmd = ("tail", "-100", myLog)
 	res = subprocess.run(cmd, capture_output=True, text=True)

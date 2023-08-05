@@ -71,8 +71,10 @@
      <td> <div id="baro_div" style="width: 260px; height: 200px;"></div> </td>
     <tr>	
    </table>	
-
-   <div id="text1" style="width: 400px; height: 300px;"></div> </td>
+   <div> 
+	<p> <img src="{{url_for('static', filename='wx-temp-d.png')}}"  alt="Temperatur" class="mx-auto d-block">
+	<p> <img src="{{url_for('static', filename='wx-barom-d.png')}}"  alt="Barometer" class="mx-auto d-block">
+	<p> <img src="{{url_for('static', filename='wx-humid-d.png')}}"  alt="Luftfeuchtigkeit" class="mx-auto d-block">
    </div>
 {% else %}
 

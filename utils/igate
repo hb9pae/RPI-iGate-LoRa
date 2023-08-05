@@ -1,4 +1,5 @@
-/opt/RPI-iGate-LoRa/iGate.log {
+/var/log/iGate.log {
+	su pi pi 
 	daily
 	rotate 10
 	compress

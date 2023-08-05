@@ -14,7 +14,7 @@ import LoraRx		# LoRa empfänger
 import HMI		# Display und Tasten
 import Config
 import APRS
-import BME280
+import WX
 import time
 import threading
 from threading import Timer
@@ -57,49 +57,14 @@ def sendBeacon() :
 	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
-def getBME280() :
-	#pdb.set_trace()
-	if (Config.EN_BME280) :
-		logging.info("Read BME280")
+def igateBeacon() :
+	Config.Beacon = True
 
-		try :
-			_altitude = int(Config.HEIGHT)
-		except:
-			logging.info("Wrong Altitude format, assume 400m asl")
-			_altitude = 400
-
-		try :
-			(temp, press_nn, hum) = BME280.getBME280(_altitude)
-			Config.Temperature = round(temp,2)
-			Config.AirPressureNN = round(press_nn,1)
-			Config.Humidity = round(hum,1)
-		except :
-			Config.EN_BME280 = False
-			Config.EN_WXDATA = False
-			logging.info("1 BME280 not available, disable BME280 and WX-DATA")
-
-
-	else : 
-			Config.EN_BME280 = False
-			Config.EN_WXDATA = False
-			logging.info("2 BME280 not available, disable BME280 and WX-DATA")
+def readBME280() :
+	Config.ReadBME280 = True
 
 def WxReport() :
-	getBME280()
-	if (Config.EN_WXDATA) :
-		logging.info("Prepare WxReport")
-		dt = datetime.datetime.now(timezone.utc)
-		_DHM = dt.strftime("@%d%H%Mz")
-		_pos = Config.POS[0] + "/" + Config.POS[1] 
-		_wind  = "_.../...g..."
-		_tempf = (Config.Temperature * 1.8) + 32 # APRS benötigt Farenheit 
-		_temp = "t" + str(int(round(_tempf,1)))
-		_rain = "r...p...P..."
-		_hum = "h" + str(int(round(Config.Humidity)))
-		_press = "b" + str(int(10*round(Config.AirPressureNN,1)))
-		_id = " BME280"
-		WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
-		APRS.sendMsg(WxReport)
+	Config.WxReport = True
 
 def aelapsedTime() :
 	end_time = time.time()
@@ -118,15 +83,16 @@ def init() :
 	Config.IP = HMI.getip()
 	HMI.initbutton()
 	LoraRx.init()
-	getBME280()
-	logging.info("IGate init done")
+	WX.readBME280()
+	#pdb.set_trace()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
-	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
+	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), igateBeacon ) 
 	iGateTimer.start()
+	logging.info("Beacon Timer started Interval %s sec.", Config.BEACONINTERVAL )
 
 	if (Config.EN_BME280) :
-		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), getBME280 ) 
+		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), readBME280 ) 
 		BMETimer.start() 
 		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
 
@@ -136,15 +102,16 @@ def init() :
 
 	webgui = threading.Thread(target=app.run, args=("0.0.0.0",))
 	webgui.start()
+	logging.info("IGate init done")
 
 	# Send StartBeacon
 	sendBeacon()
 
 def main() :
 	warnings.filterwarnings("ignore", category=DeprecationWarning)
-	logging.basicConfig(filename=myLog, level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
-	#logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+	logging.basicConfig(filename='/var/log/iGate.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 	logging.info("IGate startup")
+
 	init()
 	while(True) :
 		msg=LoraRx.loralib.recv()
@@ -165,7 +132,15 @@ def main() :
 			Config.DisplayOn += 99999999.9
 		if (Config.reboot) :
 			os.system('sudo reboot')
-
+		if (Config.ReadBME280) :
+			Config.ReadBME280 = False
+			WX.BMEInterval()
+		if (Config.WxReport) :
+			Config.WxReport = False
+			WX.WxReport()
+		if (Config.Beacon) :
+			Config.Beacon = False
+			sendBeacon()
 
 	HMI.initdisplay()
 	GPIO.cleanup()
@@ -173,11 +148,6 @@ def main() :
 
 if __name__ == "__main__":
 	main()
-
-
-
-
-
 
 
 

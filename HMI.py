@@ -14,6 +14,7 @@ import RPi.GPIO as GPIO
 
 import time
 import socket
+import logging
 
 from PIL import Image
 from PIL import ImageDraw
@@ -44,7 +45,6 @@ def getip():
 def call_sw(channel):
 	menudict = {21:0, 20:0, 16:1, 19:2, 26:3}  # Translate BCM-Pin:Display.Menu 
 	Config.Menu = menudict.get(channel)
-	#print(Config.Menu)
 
 def initbutton() :
 	#GPIO.cleanup(GPIO.BCM)

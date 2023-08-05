@@ -34,6 +34,11 @@ WXINTERVAL = 300
 Temperature = 1.0
 AirPressureNN = 1.0
 Humidity = 1.0
+WXrrd = os.path.dirname(os.path.abspath(__name__)) + "/WXrrd.rrd"
+
+ReadBME280 = False
+WxReport = False
+Beacon = False
 
 # LORA
 LastMsg = "--- None ---"
@@ -60,6 +65,7 @@ EN_BME280 = False
 
 dirtyFlag = False
 reboot = False
+
 
 # Test auf ungültige Zeichen
 def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):
@@ -114,12 +120,10 @@ def getConfig(file) :
 		return(dictionary)
 	else :
 		mkConfig(file)
-		print("No Configfile found, create %s and Reboot" % (file) )
+		logging.info("No Configfile found, create %s and Reboot" % (file) )
 		os.system('sudo reboot')
 
 def mkConfig(file) :
-		logging.info("No Configfile found, create %s and exit Program" % (file))
-
 		# ---- Write Header to  Configfile 
 		now = datetime.datetime.now() 
 		header1 = "# Konfigurtation APRS iGate\n"

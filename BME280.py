@@ -24,6 +24,8 @@ from ctypes import c_short
 from ctypes import c_byte
 from ctypes import c_ubyte
 
+import logging 
+
 DEVICE = 0x76 # Default device I2C address
 
 

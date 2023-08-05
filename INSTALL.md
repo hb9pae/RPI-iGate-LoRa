@@ -20,6 +20,7 @@ Installiere folgende Pakete als root:
 -   sudo apt install python3-dev 
 -   sudo apt install libopenjp2-7-dev
 -   sudo apt install libtiff-dev
+-   sudo apt-get install librrd-dev libpython3-dev
 
 ### Python3 Pakete (werden als Benutzer pi installiert) 
 -   pip3 install smbus2
@@ -28,6 +29,7 @@ Installiere folgende Pakete als root:
 -   pip3 install flask
 -	pip3 install Pillow
 -	pip3 install Adafruit-SSD1306
+-	pip3 install rrdtool 
 
 ###  Installation der Python-Programme und setzen der Berechtigungen
 Die Python Sourcen werden im Verzeichnis "/opt" installiert. 
