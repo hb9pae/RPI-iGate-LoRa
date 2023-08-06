@@ -44,6 +44,13 @@ Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.ini abgespeichert.
 	- EN_BME280	True / False	BME280 Sensor angeschlossen?
 	- EN_WXDATA	True / False	Bestimmt ob die BME280 Sensordaten als WX-Bake an das APRS-IS geleifert werden.
 
+##	Manueller Start des Programmes
+Der manuelle Start erflogt mit dem Befehl: 
+	- sudo systemcontrol start igate.service
+
+##	Automatischer Start nach dem Booten
+	- sudo systemctrol enable igate.service
+
 ## 	Bedienung
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode
 
