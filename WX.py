@@ -45,6 +45,8 @@ def BMEInterval() :
 	wxGraph(Config.WXrrd)
 
 def readBME280() :
+	if not (Config.EN_BME280) :
+		return				# no BME280 available
 	if not (os.path.exists(Config.WXrrd)) :
 		createRRD(Config.WXrrd)
 		logging.info("Created new RRD-DB: %s" % (Config.WXrrd))
