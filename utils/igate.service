@@ -8,6 +8,7 @@ Restart=always
 User=pi
 Group=pi
 WorkingDirectory=/opt/RPI-iGate-LoRa
+ExecStartPre=/bin/sleep 60
 ExecStart=/usr/bin/python3 /opt/RPI-iGate-LoRa/IGate.py
 
 [Install]
