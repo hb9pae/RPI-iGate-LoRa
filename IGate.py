@@ -24,6 +24,7 @@ import app
 import warnings
 import subprocess
 import RPi.GPIO as GPIO
+import urllib.request
 
 myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
 
@@ -75,16 +76,33 @@ def aelapsedTime() :
 	_s = tmp - 60 * _m
 	return("%dh %dm %ds" %(_h,_m,_s))
 
+def checkInternet() :
+	n = 1
+	while not connect() :
+		logging.info("No Internet")
+		HMI.display(4)
+		time.sleep(n)
+		n = n*2
+
+def connect():
+	try:
+		urllib.request.urlopen('http://google.com') #Python 3.x
+		return True
+	except:
+		return False
+
 def init() :
 	Config.StartTime = time.time()
 	myconf = Config.getConfig(Config.myConfig)
 	Config.setGlobals(myconf)
+	checkInternet()
+	Config.IP = HMI.getip() 
+	#pdb.set_trace()
 	APRS.init()
-	Config.IP = HMI.getip()
+	#Config.IP = HMI.getip()
 	HMI.initbutton()
 	LoraRx.init()
 	WX.readBME280()
-	#pdb.set_trace()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
 	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), igateBeacon ) 

@@ -20,6 +20,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
+import pdb
+
 #Importiere Globale Variablen
 import Config
 
@@ -37,6 +39,7 @@ def getip():
 		st.connect(('10.255.255.255', 1))
 		_ip = st.getsockname()[0]
 	except Exception:
+		#pdb.set_trace()
 		_ip = '127.0.0.1'
 	finally:
 		st.close()
@@ -151,6 +154,13 @@ def display(page) :
 		draw.text((4, 13),	Config.LastPkt, font=font1, fill=255)
 		draw.text((4, 22),	"IP:" + Config.IP, font=font1, fill=255)
 		draw.text((4, 31),	"APRS Status:  " + Config.AprsStat, font=font1, fill=255)
+
+	elif (page == 4) :		# No IP, check Internet
+		#print("", top, top, height-padding, width-padding)
+		draw.rectangle((2, 2, 125, 60 ), outline=255, fill=255)
+		draw.text((25, 1),	"Error!",  font=font2, fill=0)
+		draw.text((4, 25),	"Check Internet Connection",  font=font1, fill=0)
+		draw.text((4, 49),	"V " + Config.Version  + " (c)HB9PAE",  font=font1, fill=0)
 
 
 	display.image(image)

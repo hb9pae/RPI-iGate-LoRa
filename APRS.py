@@ -19,12 +19,16 @@ def init() :
 def sendMsg( msg ) :
 	logging.info("APRS Packet to sent: %s" , msg)
 	if (Config.EN_APRSIS) :
-		AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
-		AIS.connect()
-		AIS.sendall(msg)
-		AIS.close()
-		Config.AprsStat = "Active"
-		Config.MsgSent +=1
+		try :
+			AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
+			AIS.connect()
+			AIS.sendall(msg)
+			AIS.close()
+			Config.AprsStat = "Active"
+			Config.MsgSent +=1
+		except: 
+			logging.debug("APRS-IS upload failed")
+
 	else :
 		logging.debug("APRS-IS upload: %s",  Config.EN_APRSIS)
 		Config.AprsStat = "Test"
