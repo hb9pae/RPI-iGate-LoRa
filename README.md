@@ -1,7 +1,7 @@
 #	LoRa APRS-iGate für den Raspberry PI
 (c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch
 
-![Dashboard](dashboard.png) 
+![Dashboard](./Dashboard.png) 
 
 ##	Allgemeines
 Der LoRa APRS-iGate empfängt LoRa APRS-Positionssignale und leitet diese an das 
