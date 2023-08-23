@@ -1,18 +1,22 @@
 #  Installation iGate 
 
 Autor: hb9pae@gamail.com
-Revision: 2023-06-15, 2023-07-07, 2023-07-20, 2023-08-01
+Revision: 2023-08-23, Version 1.0.0
 
 ## Voraussetzungen
-Diese Installatiuonsanleitung basiert auf: 
-.   Raspberry PI Modell 3 oder 4
+Diese Installationsanleitung basiert auf: 
+-   Raspberry PI Modell 3 oder 4
 -   Raspbian GNU/Linux 11 (bullseye)  (32 Bit / Raspian OS lite)
 -   Python Version 3.9
--   LoRa iGate Aufsteckboard swiss-artg.ch
+-   LoRa iGate Aufsteckboard swiss-artg.ch (modifiziert)
 -   Erstelle eine SD-Karte (> 8 GB) mit einem Benutzer "pi" und erlaube den Zugriff über SSH 
 
+###	Modifikation RPI-Board
+Das RPI-Board der SWISS-ARTG muss für den Interrupt-Betrieb modifiziert werden.
+Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
+
 ##  Installation 
-Installiere folgende Pakete als root:
+Installiere unter dem Benutzer "root" folgende Pakete:
 -   sudo apt update
 -   sudo apt upgrade
 -   sudo apt install git
@@ -22,7 +26,7 @@ Installiere folgende Pakete als root:
 -   sudo apt install libtiff-dev
 -   sudo apt-get install librrd-dev libpython3-dev
 
-### Python3 Pakete (werden als Benutzer pi installiert) 
+### Python3 Pakete, werden als Benutzer pi installiert: 
 -   pip3 install smbus2
 -   pip3 install loralib
 -   pip3 install aprslib
@@ -35,7 +39,7 @@ Installiere folgende Pakete als root:
 Die Python Sourcen werden im Verzeichnis "/opt" installiert. 
 -   sudo chmod 777 /opt/            # Erlaube Lese- und Schreib-Zugriff für alle User  
 -   sudo usermod -aG adm pi		# Erlaube Lese- und Schreib-Zugriff im Verzeichnis </var/log> 
--   sudo chmod 777 /var/log		# Erlaube LEse und Schreibberechtigung Verzeichnis </var/log>
+-   sudo chmod 777 /var/log		# Erlaube Lese und Schreibberechtigung Verzeichnis </var/log>
 
 Wir installieren nun Wiring PI
 -   cd /opt
@@ -49,24 +53,25 @@ Wir installieren nun die Python Programme:
 ### Konfiguration Raspberry PI Interface
 Folgende  RPI Interface
 -   sudo raspi-config 
-        ssh enable
-        i2c enable 
-        spi enable
-        serial interface enable
+	-	ssh enable
+    -	i2c enable 
+    -	spi enable
+    -	serial interface enable
 -	sudo reboot  
 
-### Kompiliere und Test der Library
+### Kompilieren und Test der Library
 cd /opt/RPI-iGate-LoRa
 cd LORA
-	Kontrolliere/passe die  aktuelle Python Version im Makefile an:
+	Passe die  aktuelle Python Version im Makefile an:
 	Python Version 3.9 
 
-	make clean
-	male all
+-	make clean
+-	male all
 
-	
+Wir testen die Bibliothek	
 ./lora_app.exe test
 
+#### Ausgabe: 
 ```
 $ ./lora_app.exe test
 
@@ -101,20 +106,24 @@ Version: 0x12
 ```
 
 Wir kopieren die Library in das Programmverzeichnis:
-	cp loralib.so ../
+-	cp loralib.so ../
 
-### Systemdiesnte
+###	Logfile
+Das LogFile befindet sich unter /var/log/iGate.log und wird vom Benutzer pi beschrieben.
+Wir erstellen ein leeres Logfile und passen die Rechte an.
+-	sudo touch /var/log/iGate.log
+-	sudo chmod pi:pi /var/log/iGate.log
+
+### Systemdienste
 Installiere folgende Systemdienste:
 
-- Startscript: 
-sudo cp utils/igate.service  /etc/systemd/system
-sudo systemctl enable igate.service
-sudo systemctl start igate.service
+###	Startscript: 
+-	sudo cp utils/igate.service  /etc/systemd/system
+-	sudo systemctl enable igate.service
+-	sudo systemctl start igate.service
 
-- LogRotate
-sudo cp utils/igate  /etc/logrotate.d/
-
-
+###	LogRotate
+-	sudo cp utils/igate  /etc/logrotate.d/
 
 
 
