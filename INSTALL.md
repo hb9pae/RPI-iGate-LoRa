@@ -52,11 +52,11 @@ Wir installieren nun die Python Programme:
 
 ### Konfiguration Raspberry PI Interface
 Folgende  RPI Interface
--   sudo raspi-config 
-	-	ssh enable
-    -	i2c enable 
-    -	spi enable
-    -	serial interface enable
+-   	sudo raspi-config 
+	- 	ssh enable
+	-	i2c enable 
+	-	spi enable
+	-	serial interface enable
 -	sudo reboot  
 
 ### Kompilieren und Test der Library
@@ -66,7 +66,7 @@ cd LORA
 	Python Version 3.9 
 
 -	make clean
--	male all
+-	make all
 
 Wir testen die Bibliothek	
 ./lora_app.exe test
@@ -112,7 +112,7 @@ Wir kopieren die Library in das Programmverzeichnis:
 Das LogFile befindet sich unter /var/log/iGate.log und wird vom Benutzer pi beschrieben.
 Wir erstellen ein leeres Logfile und passen die Rechte an.
 -	sudo touch /var/log/iGate.log
--	sudo chmod pi:pi /var/log/iGate.log
+-	sudo chown pi:pi /var/log/iGate.log
 
 ### Systemdienste
 Installiere folgende Systemdienste:

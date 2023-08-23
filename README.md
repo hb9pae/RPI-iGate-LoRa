@@ -23,8 +23,8 @@ Das RPI-Board der SWISS-ARTG muss für den Interrupt-Betrieb modifiziert werden.
 Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
 
 ###	Wetterstation
-Falls ein Sensor BME280 angeschlossen und aktiviert ist ("SENSOR BME280 = TRUE" wird der Sensor alle 5 Minuten
-abgefragt. Ist das FLag "Wx-Data = TRUE" werden die Sensordaten an APRS.FI gesendet. Die Sensordaten werden intern
+Falls ein Sensor BME280 angeschlossen und aktiviert ist ("SENSOR BME280 = TRUE") wird der Sensor alle 5 Minuten
+abgefragt. Ist das FLag "Wx-Data = TRUE", werden die Sensordaten an APRS.FI gesendet. Die Sensordaten werden intern
 im Menue "WETTER" angezeigt.
 
 ### 	Installation
@@ -62,17 +62,15 @@ Der manuelle Start erflogt mit dem Befehl:
 
 ## 	Bedienung
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode
-  
 -	Taste links >  Status 
 -	Taste mitte	>  Konfiguration
 -	Taste rechts > Letzte Meldung 	 
-  
 Die beiden oberen Tasten neben dem Display aktivieren den Welcome-Screen.
 
 ##	Programm 
 ### 	Bibliotheken
 Das Python Programm verwendet die Bibliothek loralib.so (https://github.com/wdomski/LoRa-RaspberryPi). 
-  
+
 ###	Python Pakete:
 -	Adafruit-GPIO    V 1.0.3
 -	Adafruit-PureIO  V 1.1.11
