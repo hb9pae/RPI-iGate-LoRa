@@ -1,5 +1,5 @@
 #	LoRa APRS-iGate für den Raspberry PI
-(c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch	Version: 1.0.0
+(c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch	Version: 1.0.0a
 
 ![Dashboard](./Dashboard.png) 
 
@@ -55,10 +55,10 @@ und speichere die Daten. Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.
 
 ##	Manueller Start des Programmes
 Der manuelle Start erflogt mit dem Befehl: 
-- sudo systemcontrol start igate.service
+- sudo systemctl start igate.service
 
 ##	Automatischer Start nach dem Booten
-- sudo systemctrol enable igate.service
+- sudo systemctl enable igate.service
 
 ## 	Bedienung
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode

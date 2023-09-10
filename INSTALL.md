@@ -1,7 +1,8 @@
 #  Installation iGate 
 
-Autor: hb9pae@gamail.com
-Revision: 2023-08-23, Version 1.0.0
+Autor: hb9pae@gamail.com <br>
+Revision: 2023-09-09, Version 1.0.1 <br>
+Revision: 2023-09-10, Version 1.0.1a    Typo <br>
 
 ## Voraussetzungen
 Diese Installationsanleitung basiert auf: 
@@ -9,11 +10,13 @@ Diese Installationsanleitung basiert auf:
 -   Raspbian GNU/Linux 11 (bullseye)  (32 Bit / Raspian OS lite)
 -   Python Version 3.9
 -   LoRa iGate Aufsteckboard swiss-artg.ch (modifiziert)
--   Erstelle eine SD-Karte (> 8 GB) mit einem Benutzer "pi" und erlaube den Zugriff über SSH 
+-   Erstelle eine SD-Karte (> 8 GB) mit einem Benutzer "pi", erlaube den Zugriff über SSH 
 
 ###	Modifikation RPI-Board
 Das RPI-Board der SWISS-ARTG muss für den Interrupt-Betrieb modifiziert werden.
 Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
+![Board mod1](./Board_mod1.jpeg "Board Mod_1")
+![Board mod2](./Board_mod2.jpeg "Board Mod_2")
 
 ##  Installation 
 Installiere unter dem Benutzer "root" folgende Pakete:
@@ -52,11 +55,11 @@ Wir installieren nun die Python Programme:
 
 ### Konfiguration Raspberry PI Interface
 Folgende  RPI Interface
--   	sudo raspi-config 
-	- 	ssh enable
-	-	i2c enable 
-	-	spi enable
-	-	serial interface enable
+-   sudo raspi-config 
+	-	ssh enable
+    -	i2c enable 
+    -	spi enable
+    -	serial interface enable
 -	sudo reboot  
 
 ### Kompilieren und Test der Library
@@ -112,7 +115,7 @@ Wir kopieren die Library in das Programmverzeichnis:
 Das LogFile befindet sich unter /var/log/iGate.log und wird vom Benutzer pi beschrieben.
 Wir erstellen ein leeres Logfile und passen die Rechte an.
 -	sudo touch /var/log/iGate.log
--	sudo chown pi:pi /var/log/iGate.log
+-	sudo chmod pi:pi /var/log/iGate.log
 
 ### Systemdienste
 Installiere folgende Systemdienste:
@@ -124,6 +127,3 @@ Installiere folgende Systemdienste:
 
 ###	LogRotate
 -	sudo cp utils/igate  /etc/logrotate.d/
-
-
-
