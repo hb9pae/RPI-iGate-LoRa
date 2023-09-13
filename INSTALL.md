@@ -3,6 +3,7 @@
 Autor: hb9pae@gamail.com <br>
 Revision: 2023-09-09, Version 1.0.1 <br>
 Revision: 2023-09-10, Version 1.0.1a    Typo <br>
+Revision: 2023-09-13, Version 1.0.1b    Typo <br>
 
 ## Voraussetzungen
 Diese Installationsanleitung basiert auf: 
@@ -15,8 +16,9 @@ Diese Installationsanleitung basiert auf:
 ###	Modifikation RPI-Board
 Das RPI-Board der SWISS-ARTG muss für den Interrupt-Betrieb modifiziert werden.
 Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
-![Board mod1](./Board_mod1.jpeg "Board Mod_1")
-![Board mod2](./Board_mod2.jpeg "Board Mod_2")
+<center> <img src="static/Board_mod1.jpeg" alt="Board Mod 1" style="height: 300px; width:300px;"/>
+<img src="static/Board_mod2.jpeg" alt="Board Mod 2" style="height: 300px; width:300px;"/>
+</center>
 
 ##  Installation 
 Installiere unter dem Benutzer "root" folgende Pakete:
@@ -115,7 +117,7 @@ Wir kopieren die Library in das Programmverzeichnis:
 Das LogFile befindet sich unter /var/log/iGate.log und wird vom Benutzer pi beschrieben.
 Wir erstellen ein leeres Logfile und passen die Rechte an.
 -	sudo touch /var/log/iGate.log
--	sudo chmod pi:pi /var/log/iGate.log
+-	sudo chown pi:pi /var/log/iGate.log
 
 ### Systemdienste
 Installiere folgende Systemdienste:
