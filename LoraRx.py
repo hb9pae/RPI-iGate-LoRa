@@ -17,6 +17,7 @@ import logging
 from threading import Timer
 import aprslib
 from datetime import datetime
+import random
 
 import APRS
 import Config
@@ -32,14 +33,15 @@ def gotPacket(buffer) :
 	Config.RSSI = buffer[3]
 	Config.SNR = buffer[4]
 	message="".join(map(chr,buffer[0]))
-	message=message[3:]
+	#pdb.set_trace()
+	message=message[3:-1]
 	Config.LastMsg=now.strftime("%Y-%m-%d, %H:%M:%S: ") + message
 	logging.info("RX Packet received Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR))
 	Config.RxCount +=1
 	addrend = message.find(":",5,40)
 	# add iGate call to path
 	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
-	APRS.sendMsg(message)
+	APRS.sendMsg(message + (" " * random.randint(0,5)) )
 
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)

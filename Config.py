@@ -66,6 +66,9 @@ EN_BME280 = False
 dirtyFlag = False
 reboot = False
 
+#APRS
+AIS = ""
+Login = 0
 
 # Test auf ungültige Zeichen
 def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):

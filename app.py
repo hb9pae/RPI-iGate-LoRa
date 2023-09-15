@@ -102,7 +102,7 @@ def config() :
 @app.route('/')
 def status() :
 	#pdb.set_trace()
-	varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.EN_APRSIS, " ":" ",
+	varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.EN_APRSIS, "APRS-IS Login":Config.Login," ":" ",
 		"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
 		"Sensor BME280":Config.EN_BME280, "BME280 Intervall": Config.BMEINTERVAL, 
 		"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
