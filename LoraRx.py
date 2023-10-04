@@ -34,7 +34,12 @@ def gotPacket(buffer) :
 	Config.SNR = buffer[4]
 	message="".join(map(chr,buffer[0]))
 	#pdb.set_trace()
-	message=message[3:-1]
+	# Eige Tracker schliessen dans MSG Strin mit einem 0x00 ab, wir entfernen nicht  ASCII am Ende
+	lastchar = ord(message[-1])
+	if (lastchar < 32) :
+		message = message[3:-1]
+	else :
+		message=message[3:]
 	Config.LastMsg=now.strftime("%Y-%m-%d, %H:%M:%S: ") + message
 	logging.info("RX Packet received Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR))
 	Config.RxCount +=1
