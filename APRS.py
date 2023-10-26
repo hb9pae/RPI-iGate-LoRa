@@ -10,11 +10,15 @@ import Config
 
 def init() :
 	Config.AprsStat = "Not active"
-	logging.debug("APRS init() done") 
 	Config.Login = 0
-	Config.AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
-	Config.AIS.connect()
-	Config.Login += 1
+	if (Config.EN_APRSIS) :
+		try :
+			Config.AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
+			Config.AIS.connect()
+			Config.Login += 1
+		except: 
+			logging.info("APRS-IS upload failed")
+	logging.debug("APRS init() done") 
 
 """
 def sendMsg( msg ) :
