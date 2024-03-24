@@ -1,5 +1,5 @@
 #	LoRa APRS-iGate für den Raspberry PI
-(c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch	Version: 1.0.0a
+(c) 2023, Peter Stirnimann, hb9pae@swiss-artg.ch	Version: 1.0.0
 
 ![Dashboard](./Dashboard.png) 
 
@@ -16,19 +16,21 @@ als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  https://www.swi
 
 ## Copyright
 Das hier dokumentierte Programm ist Open Source, der Programmcode ist frei verfuegbar und steht  
-unter https://github.com/hb9pae/RPI-iGate-LoRa zum Download zur Verfuegung. 
+unter https://github.com/swiss-artg/LoRa-APRS_RPI-iGate 
+zum Download zur Verfuegung. 
 
 ###	Modifikation RPI-Board
 Das RPI-Board der SWISS-ARTG muss für den Interrupt-Betrieb modifiziert werden.
 Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
 
 ###	Wetterstation
-Falls ein Sensor BME280 angeschlossen und aktiviert ist ("SENSOR BME280 = TRUE") wird der Sensor alle 5 Minuten
-abgefragt. Ist das FLag "Wx-Data = TRUE", werden die Sensordaten an APRS.FI gesendet. Die Sensordaten werden intern
+Falls ein Sensor BME280 angeschlossen und aktiviert ist ("SENSOR BME280 = TRUE" wird der Sensor alle 5 Minuten
+abgefragt. Ist das FLag "Wx-Data = TRUE" werden die Sensordaten an APRS.FI gesendet. Die Sensordaten werden intern
 im Menue "WETTER" angezeigt.
 
 ### 	Installation
-Für die Installation wird ein IMAGE zur Verfügung gestellt. Kopiere das Image-File 
+Für die Installation wird ein IMAGE zur Verfügung gestellt. 
+https://tinyurl.com/RPI-Image Kopiere das Image-File 
 mit einem Imager-Programm (z.B. Raspberry Pi Imager) auf eine SD-Karte (mind. 8 GB).
 Der Programmcode kann auch vom Git Repository geladen werden. Dabei müssen die erforderlichen Bibliotheken
 installiert werden. Weitere hinweis zu einer manuellen Installation sind im INSTALL.md dokumentiert.   
@@ -55,22 +57,24 @@ und speichere die Daten. Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.
 
 ##	Manueller Start des Programmes
 Der manuelle Start erflogt mit dem Befehl: 
-- sudo systemctl start igate.service
+- sudo systemcontrol start igate.service
 
 ##	Automatischer Start nach dem Booten
-- sudo systemctl enable igate.service
+- sudo systemctrol enable igate.service
 
 ## 	Bedienung
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode
+  
 -	Taste links >  Status 
 -	Taste mitte	>  Konfiguration
 -	Taste rechts > Letzte Meldung 	 
+  
 Die beiden oberen Tasten neben dem Display aktivieren den Welcome-Screen.
 
 ##	Programm 
 ### 	Bibliotheken
 Das Python Programm verwendet die Bibliothek loralib.so (https://github.com/wdomski/LoRa-RaspberryPi). 
-
+  
 ###	Python Pakete:
 -	Adafruit-GPIO    V 1.0.3
 -	Adafruit-PureIO  V 1.1.11
