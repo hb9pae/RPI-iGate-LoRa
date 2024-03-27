@@ -14,9 +14,9 @@ import re
 import datetime
 
 
-__version__     = "1.1.0"
+__version__     = "1.1.1"
 __author__      = "HB9PAE, Peter"
-__copyright__   = "Copyright 2023"
+__copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
 
 Version = __version__
@@ -112,19 +112,20 @@ def setGlobals(_conf) :
 		POS = grad2min(float(LAT), float(LON) )
 
 def getConfig(file) :
-	if (os.path.isfile(file)) :
-		config = configparser.ConfigParser()
-		config.read(file)
-		dictionary = {}
-		for section in config.sections():
-			dictionary[section] = {}
-			for option in config.options(section):
-				dictionary[section][option] = config.get(section, option)
-		return(dictionary)
-	else :
+	#pdb.set_trace()
+	if  (not os.path.isfile(file)) :
 		mkConfig(file)
-		logging.info("No Configfile found, create %s and Reboot" % (file) )
-		os.system('sudo reboot')
+		logging.info("No Configfile found, create %s" % (file) )
+		#os.system('sudo reboot')
+
+	config = configparser.ConfigParser()
+	config.read(file)
+	dictionary = {}
+	for section in config.sections():
+		dictionary[section] = {}
+		for option in config.options(section):
+			dictionary[section][option] = config.get(section, option)
+	return(dictionary)
 
 def mkConfig(file) :
 		# ---- Write Header to  Configfile 
@@ -144,9 +145,9 @@ def mkConfig(file) :
 		_conf=configparser.ConfigParser()
 		_conf["APRS-IS"] = {
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
-			"Lat" : "47.53668", "Lon" : "8.58164", "height" : "399",\
+			"Lat" : "47.5", "Lon" : "8.5", "height" : "399",\
 			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\
-			"EN_WxData" : "False", "WxInterval" : "300"
+			"EN_WxData" : "False", "WxInterval" : "300", "WebIP" : "127.0.0.1"
 			}
 		with open(file, 'a') as configfile:
 			_conf.write(configfile)

@@ -41,7 +41,6 @@ def elapsedTime() :
 	_s = tmp - 60 * _m
 	return("%dh %dm %ds" %(_h,_m,_s))
 
-
 def saveconfig(newconf) :
 	header1 = "# Konfiguration APRS iGate\n"
 	header2 = "# (c) hb9pae@gmail.com\n"
@@ -63,12 +62,16 @@ def saveconfig(newconf) :
 @app.route("/log/",  methods=['GET', 'POST'] )
 def log() :
 	myLog =  "/var/log/iGate.log"
-	#pdb.set_trace()
 	cmd = ("tail", "-100", myLog)
 	res = subprocess.run(cmd, capture_output=True, text=True)
 	out = res.stdout.split("\n")
 	#pdb.set_trace()
 	return render_template("log.html", content = out, ds = datestring(), dirty=isdirty())
+
+@app.route("/debug/",  methods=['GET', 'POST'] )
+# set breakpoint
+def debug() :
+	pdb.set_trace()
 
 
 @app.route("/reboot")

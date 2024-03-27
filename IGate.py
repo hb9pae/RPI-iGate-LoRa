@@ -118,9 +118,9 @@ def init() :
 		WxTimer.start()
 		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
 
-	webgui = threading.Thread(target=app.run, args=("0.0.0.0",))
+	webgui = threading.Thread(target=app.run, args=(Config.WEBIP,))
 	webgui.start()
-	logging.info("IGate init done")
+	logging.info("IGate init done, Webinterface http://:%s:5000", Config.WEBIP)
 
 	# Send StartBeacon
 	sendBeacon()
@@ -128,15 +128,17 @@ def init() :
 def main() :
 	warnings.filterwarnings("ignore", category=DeprecationWarning)
 	logging.basicConfig(filename='/var/log/iGate.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-	logging.info("IGate startup")
+	logging.info("IGate started")
 
 	init()
 	while(True) :
 		msg=LoraRx.loralib.recv()
 		if msg[1] > 0 and msg[5] > 1:
 			PktErr += 1
-			logging.info("Packet received, CRC Error")
-		if msg[5] == 0 and msg[1] > 0:
+			logging.info("Packet received, CRC Errors: %d", PktErr)
+			logging.info("Packet Size [0] %d, CRC [5] %d", msg[1], msg[5])
+		if msg[1] > 0 and msg[5] == 0 :
+			logging.info("Packet received, no CRC error")
 			#pdb.set_trace()
 			LoraRx.gotPacket(msg)
 			HMI.display(3)  # display received Packaage

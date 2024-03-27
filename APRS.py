@@ -43,7 +43,7 @@ def sendMsg( msg ) :
 
 def sendMsg( msg ) :
 	logging.info("APRS Packet to sent: %s" , msg)
-	logging.info("MSG: %s", msg)
+	#logging.info("MSG: %s", msg)
 	if (Config.EN_APRSIS) :
 		#pdb.set_trace()
 		if not Config.AIS._connected  :
@@ -59,7 +59,7 @@ def sendMsg( msg ) :
 			logging.info("APRS-IS upload failed")
 
 	else :
-		logging.debug("APRS-IS upload: %s",  Config.EN_APRSIS)
+		logging.info("APRS-IS upload: %s",  Config.EN_APRSIS)
 		Config.AprsStat = "Test"
 	Config.LastPkt = msg
 
