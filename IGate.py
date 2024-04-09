@@ -4,15 +4,17 @@
 """
 Python Modul  iGate
 - main() Module
-- lädt HMI.py und LoRa-RX Module
+- lädt Display.py und LoRa-RX Module
 """
 
 import os, sys
 import pdb
 import logging
-import LoraRx		# LoRa empfänger
-import HMI		# Display und Tasten
 import Config
+
+import LoraRx		# LoRa empfänger
+import Button
+import Display		# Display 
 import APRS
 import WX
 import time
@@ -80,7 +82,7 @@ def checkInternet() :
 	n = 1
 	while not connect() :
 		logging.info("No Internet")
-		HMI.display(4)
+		Display.display(4)
 		time.sleep(n)
 		n = n*2
 
@@ -96,11 +98,12 @@ def init() :
 	myconf = Config.getConfig(Config.myConfig)
 	Config.setGlobals(myconf)
 	checkInternet()
-	Config.IP = HMI.getip() 
-	#pdb.set_trace()
+	Config.getip() 
 	APRS.init()
-	#Config.IP = HMI.getip()
-	HMI.initbutton()
+	#pdb.set_trace()
+	Button.init_btnthread()
+	#Config.Menu=0
+	Display.display(0)
 	LoraRx.init()
 	WX.readBME280()
 
@@ -132,6 +135,7 @@ def main() :
 
 	init()
 	while(True) :
+		#pdb.set_trace()
 		msg=LoraRx.loralib.recv()
 		if msg[1] > 0 and msg[5] > 1:
 			PktErr += 1
@@ -141,14 +145,14 @@ def main() :
 			logging.info("Packet received, no CRC error")
 			#pdb.set_trace()
 			LoraRx.gotPacket(msg)
-			HMI.display(3)  # display received Packaage
+			Display.display(3)  # display received Packaage
 		time.sleep(0.1) 
 
 		if (Config.Menu < 5) :
-			HMI.display(Config.Menu)
+			Display.display(Config.Menu)
 			Config.Menu = 99
 		if (time.time() - Config.DisplayOn) > Config.DisplayTimeout :
-			HMI.initdisplay()
+			Display.initdisplay()
 			Config.DisplayOn += 99999999.9
 		if (Config.reboot) :
 			os.system('sudo reboot')
@@ -162,8 +166,6 @@ def main() :
 			Config.Beacon = False
 			sendBeacon()
 
-	HMI.initdisplay()
-	GPIO.cleanup()
 	main()
 
 if __name__ == "__main__":

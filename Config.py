@@ -12,9 +12,10 @@ import pdb
 import logging
 import re
 import datetime
+import socket
 
 
-__version__     = "1.1.1"
+__version__     = "1.2.0"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
@@ -69,6 +70,23 @@ reboot = False
 #APRS
 AIS = ""
 Login = 0
+
+AprsStat = ""
+
+global MYIP
+
+def getip():
+	global MYIP
+	st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	try:
+		st.connect(('10.255.255.255', 1))
+		_ip = st.getsockname()[0]
+	except Exception:
+		#pdb.set_trace()
+		_ip = '127.0.0.1'
+	finally:
+		st.close()
+		MYIP =  _ip
 
 # Test auf ungültige Zeichen
 def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):

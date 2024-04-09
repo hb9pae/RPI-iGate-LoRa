@@ -1,0 +1,75 @@
+Versions 1.3
+-------------
+
+Diverse anpassungen unter Python 11 und unter Debian 12
+
+
+Linux LORA 6.6.20+rpt-rpi-v7 #1 SMP Raspbian 1:6.6.20-1+rpt1 (2024-03-07) armv7l GNU/Linux
+Debian Version 12.1
+
+
+LORA/Makefile
+
+Python Version angepasst
+- PYTHONVER=python3.11
+
+
+Fehler beim Kompilieren unter 64 bit beheben:
+- export CXXFLAGS="$CXXFLAGS -fPIC"
+
+LORA/lora.c
+https://stackoverflow.com/questions/70705404/systemerror-py-ssize-t-clean-macro-must-be-defined-for-formats
+
+#ifdef PYTHONMODULE
+#define PY_SSIZE_T_CLEAN
+#include <Python.h>
+
+
+
+Wir installieren eine virtuelle Umgebung "lora" und aktivieren diese: 
+-	python -m venv lora
+-	cd lora
+- 	source bin/activate
+Nun installieren wir die Python3-Pakete
+
+Neu verwendete Python-Pakate: gpizero und lgpio
+das Paket Rpi.GPIo hann die Events beim Button Press unter Debain 12 nicht mehr verarbeiten
+
+Package          Version
+---------------- -------
+Adafruit-GPIO    1.0.3
+Adafruit-PureIO  1.1.11
+Adafruit-SSD1306 1.6.2
+aprslib          0.7.2
+blinker          1.7.0
+click            8.1.7
+colorzero        2.0
+Flask            3.0.2
+gpiozero         2.0.1
+itsdangerous     2.1.2
+Jinja2           3.1.3
+lgpio            0.2.2.0
+loralib          0.1.2
+MarkupSafe       2.1.5
+pillow           10.3.0
+pip              24.0
+pycryptodome     3.20.0
+RPi.GPIO         0.7.1
+rrdtool          0.1.16
+setuptools       66.1.1
+smbus2           0.4.3
+spidev           3.6
+Werkzeug         3.0.2
+
+(lora) pi@LORA:/opt/RPI-iGate-LoRa/LORA $ 
+- 
+-----------
+Anerunge nda den Sourcen
+- HMI.py entfällt
+- Display.py 	Ansteuerung OLED Display
+- Button.py	python Thread zur überwachung Button
+- Anpassungen IGate.py
+
+
+
+
