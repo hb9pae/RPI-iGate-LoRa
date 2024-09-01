@@ -54,6 +54,15 @@ def init() :
 	logging.debug("LoRa RX init done")
 #	pdb.set_trace()
 
+def main() :
+	while(True) :
+		msg=loralib.recv()
+                if msg[1] > 0 and msg[5] == 0 :
+			logging.info("Packet received, no CRC error")
+			#pdb.set_trace()
+			gotPacket(msg)
+			HMI.display(3)  # display received Packaage
+		time.sleep(0.1)
 
 if __name__ == "__main__":
 	init()

@@ -2,7 +2,7 @@
 # Single lora testing app
 
 CC=g++
-CFLAGS=-c -g -Wall -pedantic
+CFLAGS=-c -g -Wall -pedantic -fPIC
 LIBS=-lwiringPi 
 PYTHONVER=python3.11
 

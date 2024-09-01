@@ -11,7 +11,7 @@ import os, sys
 import pdb
 import logging
 import LoraRx		# LoRa empfänger
-import HMI		# Display und Tasten
+#import HMI		# Display und Tasten
 import Config
 import APRS
 import WX
@@ -80,7 +80,7 @@ def checkInternet() :
 	n = 1
 	while not connect() :
 		logging.info("No Internet")
-		HMI.display(4)
+		Display.display(4)
 		time.sleep(n)
 		n = n*2
 
@@ -96,11 +96,11 @@ def init() :
 	myconf = Config.getConfig(Config.myConfig)
 	Config.setGlobals(myconf)
 	checkInternet()
-	Config.IP = HMI.getip() 
+	Config.IP = Display.getip() 
 	#pdb.set_trace()
 	APRS.init()
 	#Config.IP = HMI.getip()
-	HMI.initbutton()
+	Button.initbutton()
 	LoraRx.init()
 	WX.readBME280()
 
