@@ -1,9 +1,11 @@
 
 from  flask import Flask, render_template, request, url_for, flash, redirect, jsonify
+from flask_basicauth import BasicAuth
 import time
 import pdb
 import configparser, json
 import Config
+import IGate
 import threading
 import subprocess 
 import os, sys
@@ -13,8 +15,22 @@ from flask.logging import default_handler
 import logging
 
 
-app = Flask(__name__)
-app.logger.removeHandler(default_handler)
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2024"
+__email__ = "hb9pae@gmail.com"
+
+myconf = Config.getConfig(Config.myConfig)
+
+
+App = Flask(__name__)
+App.logger.removeHandler(default_handler)
+
+App.config['BASIC_AUTH_USERNAME'] = myconf.get("APRS").get("call")
+App.config['BASIC_AUTH_PASSWORD'] = myconf.get("APRS").get("secret")
+
+basic_auth = BasicAuth(App)
+
+
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
@@ -30,7 +46,7 @@ def datestring() :
 	return (now.strftime('%Y-%m-%d %H:%M:%S'))
 
 def run(ip) :
-	 app.run(ip, debug=False)
+	 App.run(ip, debug=False)
 
 def elapsedTime() :
 	end_time = time.time()
@@ -59,7 +75,7 @@ def saveconfig(newconf) :
 	with open(Config.myConfig, "a") as configfile :
 		config.write(configfile)
 
-@app.route("/log/",  methods=['GET', 'POST'] )
+@App.route("/log/",  methods=['GET', 'POST'] )
 def log() :
 	myLog =  "/var/log/iGate.log"
 	cmd = ("tail", "-100", myLog)
@@ -68,22 +84,24 @@ def log() :
 	#pdb.set_trace()
 	return render_template("log.html", content = out, ds = datestring(), dirty=isdirty())
 
-@app.route("/debug/",  methods=['GET', 'POST'] )
+@App.route("/debug/",  methods=['GET', 'POST'] )
 # set breakpoint
 def debug() :
 	pdb.set_trace()
 
 
-@app.route("/reboot")
-def reboot() :
+@App.route("/re_start")
+def re_start() :
+	# get the pid of the current process
 	Config.reboot = True
-	Config.dirtyFlag = False
+	Config.dirtyFlag = 0
 	return redirect(url_for('status') )
 
-
-@app.route("/config/",  methods=['GET', 'POST'] )
+@App.route("/config/",  methods=['GET', 'POST'] )
+@basic_auth.required
 def config() :
 	myconfig = Config.getConfig(Config.myConfig)
+	#pdb.set_trace()
 
 	configlist={}
 	for section in myconfig :
@@ -102,42 +120,38 @@ def config() :
 		return redirect(url_for('status') )
 	return render_template("config.html", content = configlist, ds = datestring(), dirty = isdirty() )
 
-@app.route('/')
+@App.route('/')
 def status() :
 	#pdb.set_trace()
-	varlist={"iGate Call":Config.CALL, "Connect to APRS-IS":Config.EN_APRSIS, "APRS-IS Login":Config.Login," ":" ",
-		"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Altitude":Config.HEIGHT, " " :" ",
+	to = (time.time() - Config.DisplayOn) 
+	varlist={"Version" : Config.Version, "Rufzeichen":Config.CALL, "Status APRS-IS":Config.EN_APRSIS, "- Loginversuche":Config.Login," ":" ",
+		"iGate LAT":Config.LAT, "iGate LON":Config.LON, "iGate Höhe":Config.HEIGHT, " " :" ",
 		"Sensor BME280":Config.EN_BME280, "BME280 Intervall": Config.BMEINTERVAL, 
 		"Temperatur":Config.Temperature, "Luftdruck":Config.AirPressureNN, "Luftfeuchtigkeit":Config.Humidity," ":" ",
-		"Last Message":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
-		"Packet Err": Config.PktErr, "APRS-IS Message": Config.MsgSent,"RX Count": Config.RxCount,
-		"Wx-Data": Config.EN_WXDATA, "WX Intervall" : Config.WXINTERVAL,
-		"Beacon Intervall": Config.BEACONINTERVAL, "Beacon Message": Config.BEACONMESSAGE, "Uptime": elapsedTime(), 
-		"Version" : Config.Version, "DirtyFlag": Config.dirtyFlag
+		"Lezte Meldung":Config.LastMsg,"- Empfangen":Config.LastRx, "Signal RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
+		"Fehler": Config.RxErr, "APRS-IS Meldung": Config.MsgSent,"RX Zähler": Config.RxCount,
+		"Wetter-Daten": Config.EN_WXDATA, "Wetter Intervall" : Config.WXINTERVAL,
+		"Baken Intervall": Config.BEACONINTERVAL, "Baken Meldung": Config.BEACONMESSAGE, "Uptime": elapsedTime()
 	}
 
 	return render_template("status.html", content = varlist, ds = datestring(), dirty = isdirty())
 
-@app.route('/about/')
+@App.route('/about/')
 def about() :
 	#pdb.set_trace()
 	return render_template('about.html', ds = datestring(), dirty = isdirty())
 
-@app.route('/wx/')
+@App.route('/wx/')
 def wx() :
 	#pdb.set_trace()
 	wxlist = [Config.Temperature, Config.Humidity, Config.AirPressureNN]
 	if (Config.EN_WXDATA) :
 		wx = "Show"
-	else :	
+	else :
 		wx = "Hide"
 	return render_template('wx.html', content = wxlist, WxData = wx, ds = datestring(), dirty = isdirty())
 	#pdb.set_trace()
 
 
 if __name__ == '__main__':
-#	x = threading.Thread(target=run, args=(1,))
-#	x.start()
-#	while 1 :
-#		time.sleep(10)
 	run("0.0.0.0")

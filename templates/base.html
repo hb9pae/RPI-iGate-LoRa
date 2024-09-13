@@ -36,19 +36,22 @@
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('config') }}"><h4>Konfiguration</h4></a>
       </li>
+
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('about') }}"><h4>Info</h4></a>
       </li>
     </ul>
-{% if dirty == "True"%}
-      <li class="mx.auto">
-	<a class="navbar-brand "href="/reboot">RESTART iGate</a>
-      </li>
-{% endif %}
-
   </div>
 </nav>
-
+{% if dirty == "True"%}
+  <div class="container-fluid">
+	<p>
+        <form action="/re_start">
+           <button type="submit" class="btn btn-primary">Reboot</button>
+        <a> Die Daten wurden gespeichert. Zum Aktivieren ist ein Neustart notwendig. </a>
+        </form>
+  </div>
+{% endif%}
 <div class="container-fluid mt-3">
 
 <h3> {% block header %}   {% endblock %} - LoRa APRS-iGate </h3>

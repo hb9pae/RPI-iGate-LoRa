@@ -12,9 +12,9 @@ import pdb
 import logging
 import re
 import datetime
+import time
 
-
-__version__     = "1.1.1"
+__version__     = "1.3.0"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
@@ -24,8 +24,12 @@ myConfig = os.path.dirname(os.path.abspath(__name__)) + "/igate.ini"
 Frequ   = 433775000
 SR      = 12
 
-StartTime = datetime.datetime.now()
+StartTime = time.time()
+Uptime = 0
+DisplayOn = 0
 DisplayTimeout = 60
+Menu = 0
+MenuLast = 0
 
 # Auslesen BME280
 EN_WXDATA = False
@@ -40,15 +44,20 @@ ReadBME280 = False
 WxReport = False
 Beacon = False
 
-# LORA
-LastMsg = "--- None ---"
-RxCount = 0
-PktErr = 0
-# Message to APRS-IS
-MsgSent = 0
+# LORA RX
+LastMsg = "None"
+LastRx = "None"
+PktSize = 0
 PktRSSI = 0
 RSSI = 0
 SNR = 0
+RxCount = 0
+RxErr = 0
+From = "None"
+To = "None"
+
+# Message to APRS-IS
+MsgSent = 0
 
 
 # Variablen aus igate.ini ----
@@ -62,6 +71,7 @@ HEIGHT = 0
 BEACONINTERVAL = 600
 BEACONMESSAGE = "-"
 EN_BME280 = False
+SECRET = ""
 
 dirtyFlag = False
 reboot = False
@@ -70,10 +80,11 @@ reboot = False
 AIS = ""
 Login = 0
 
-# Test auf ungültige Zeichen
-def match(strg, search=re.compile(r'[^A-Z0-9.-]').search):
-	res = bool(search(strg))
-	return(True)
+def upTime() :
+	upt = time.time() - StartTime
+	m, s = divmod(int(upt), 60)
+	h, m = divmod(m, 60)
+	return('{:02d}:{:02d}:{:02d}'.format(h, m, s))
 
 # Umrechnen von Dezimal-Grad zu Grad-Minuten
 def grad2min(_lat, _lon) :
@@ -147,7 +158,7 @@ def mkConfig(file) :
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
 			"Lat" : "47.5", "Lon" : "8.5", "height" : "399",\
 			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\
-			"EN_WxData" : "False", "WxInterval" : "300", "WebIP" : "127.0.0.1"
+			"EN_WxData" : "False", "WxInterval" : "300", "SECRET" : "geheim", "WebIP" : "0.0.0.0"
 			}
 		with open(file, 'a') as configfile:
 			_conf.write(configfile)

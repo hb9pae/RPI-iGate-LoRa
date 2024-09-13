@@ -8,6 +8,11 @@ import pdb
 
 import Config
 
+
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2024"
+__email__ = "hb9pae@gmail.com"
+
 def init() :
 	Config.AprsStat = "Not active"
 	Config.Login = 0
@@ -20,29 +25,8 @@ def init() :
 			logging.info("APRS-IS upload failed")
 	logging.debug("APRS init() done") 
 
-"""
 def sendMsg( msg ) :
-	logging.info("APRS Packet to sent: %s" , msg)
-	logging.info("MSG: %s", msg)
-	if (Config.EN_APRSIS) :
-		try :
-			AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
-			AIS.connect()
-			AIS.sendall(msg)
-			AIS.close()
-			Config.AprsStat = "Active"
-			Config.MsgSent +=1
-		except: 
-			logging.info("APRS-IS upload failed")
-
-	else :
-		logging.debug("APRS-IS upload: %s",  Config.EN_APRSIS)
-		Config.AprsStat = "Test"
-	Config.LastPkt = msg
-"""
-
-def sendMsg( msg ) :
-	logging.info("APRS Packet to sent: %s" , msg)
+	logging.info("APRS Packet to send: %s" , msg)
 	#logging.info("MSG: %s", msg)
 	if (Config.EN_APRSIS) :
 		#pdb.set_trace()

@@ -26,6 +26,10 @@ from ctypes import c_ubyte
 
 import logging 
 
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2024"
+__email__ = "hb9pae@gmail.com"
+
 DEVICE = 0x76 # Default device I2C address
 
 

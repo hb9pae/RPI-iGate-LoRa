@@ -3,27 +3,32 @@
 
 """
 Python Modul  iGate
-- main() Module
-- lädt HMI.py und LoRa-RX Module
+- main() Modul
 """
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2024"
+__email__ = "hb9pae@gmail.com"
+
+import LoraRx		# LoRa empfänger
+import Config
+import APRS
+import WX
+import Button
+import Display
+import App
 
 import os, sys
 import pdb
 import logging
-import LoraRx		# LoRa empfänger
-#import HMI		# Display und Tasten
-import Config
-import APRS
-import WX
 import time
 import threading
+from signal import SIGKILL
 from threading import Timer
 from datetime import timezone
 import datetime
-import app
 import warnings
 import subprocess
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import urllib.request
 
 myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
@@ -92,15 +97,15 @@ def connect():
 		return False
 
 def init() :
-	Config.StartTime = time.time()
+	# wird in Config gesetzt 	Config.StartTime = time.time()
 	myconf = Config.getConfig(Config.myConfig)
 	Config.setGlobals(myconf)
 	checkInternet()
-	Config.IP = Display.getip() 
+	Config.IP = Button.getip() 
 	#pdb.set_trace()
+	Display.init()
+	Button.init()
 	APRS.init()
-	#Config.IP = HMI.getip()
-	Button.initbutton()
 	LoraRx.init()
 	WX.readBME280()
 
@@ -118,7 +123,7 @@ def init() :
 		WxTimer.start()
 		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
 
-	webgui = threading.Thread(target=app.run, args=(Config.WEBIP,))
+	webgui = threading.Thread(target=App.run, args=(Config.WEBIP,))
 	webgui.start()
 	logging.info("IGate init done, Webinterface http://:%s:5000", Config.WEBIP)
 
@@ -131,27 +136,25 @@ def main() :
 	logging.info("IGate started")
 
 	init()
-	while(True) :
-		msg=LoraRx.loralib.recv()
-		if msg[1] > 0 and msg[5] > 1:
-			PktErr += 1
-			logging.info("Packet received, CRC Errors: %d", PktErr)
-			logging.info("Packet Size [0] %d, CRC [5] %d", msg[1], msg[5])
-		if msg[1] > 0 and msg[5] == 0 :
-			logging.info("Packet received, no CRC error")
-			#pdb.set_trace()
-			LoraRx.gotPacket(msg)
-			HMI.display(3)  # display received Packaage
-		time.sleep(0.1) 
+	#Display.display(0)
 
-		if (Config.Menu < 5) :
-			HMI.display(Config.Menu)
-			Config.Menu = 99
-		if (time.time() - Config.DisplayOn) > Config.DisplayTimeout :
-			HMI.initdisplay()
+	while(True) :
+		LoraRx.loraRX()
+		#print("Menue: %d, Last: %d" % (Config.Menu, Config.MenuLast) )
+
+		if (Config.Menu < 10) :
+			Display.display(Config.Menu)
+
+		to = int(time.time() - Config.DisplayOn) 
+		if to > Config.DisplayTimeout :
+			Display.clear()
+			#pdb.set_trace()
 			Config.DisplayOn += 99999999.9
+
 		if (Config.reboot) :
-			os.system('sudo reboot')
+			Config.reboot = False
+			pid = os.getpid()
+			os.kill(pid, SIGKILL)
 		if (Config.ReadBME280) :
 			Config.ReadBME280 = False
 			WX.BMEInterval()
@@ -162,9 +165,7 @@ def main() :
 			Config.Beacon = False
 			sendBeacon()
 
-	HMI.initdisplay()
-	GPIO.cleanup()
-	main()
+		time.sleep(0.05) 
 
 if __name__ == "__main__":
 	main()

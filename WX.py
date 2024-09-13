@@ -5,6 +5,10 @@
 Python Modul  WX
 """
 
+__author__      = "HB9PAE, Peter"
+__copyright__   = "Copyright 2024"
+__email__ = "hb9pae@gmail.com"
+
 import os, sys
 import pdb
 import logging
