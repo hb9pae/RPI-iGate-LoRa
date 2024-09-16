@@ -2,27 +2,29 @@
 
 (c) 2024, Peter Stirnimann, <hb9pae@gmail.ch> Software-Version: 1.3.0
 
-![Dashboard](./Dashboard.png) 
+![Dashboard](static/Dashboard.png)
 
 ## Allgemeines
 
-Der LoRa Empfänger empfängt Positionssignale und APRS-Meldungen im Amateurradio LoRa-Band (433.775 MHz). Die decodierten APRS-Meldungen werden anschliessend an die APRS Datenbank weitergeleitet. Diese können anschliessend unter http://aprs.fi abgerufen und angezeigt werden. 
+Der LoRa Empfänger empfängt Positionssignale und APRS-Meldungen im Amateurradio LoRa-Band (433.775 MHz). Die decodierten APRS-Meldungen werden anschliessend an die APRS Datenbank weitergeleitet. Diese können anschliessend unter <http://aprs.fi> abgerufen und angezeigt werden.
 
-Die empfangenen Daten werden im Status-Report auf dem OLED-Display oder über einen Webbrowser <IP>:5000 (http://192.168.0.123:5000)  abgerufen werden.
+Die empfangenen Daten werden im Status-Report auf dem OLED-Display oder über einen Webbrowser <IP>:5000 (<http://192.168.0.123:5000>)  abgerufen werden.
 
 Das Python Programm IGate.py steuert das LoRa RPI-Board der SWISS-ARTG mit dem RF95W Chip RF-Hope
 als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  <https://www.swiss-artg.ch/index.php?id=174>  ( Menu: Digital Data > LoRa-APRS > LoRa Gateway)
 
+<div style="page-break-after: always;"></div>
+
 ## Neues in der Version 1.3
 
-- Die Konfigurationsdaten sind mit einem Passwort geschützt (Web-Interface). 
+- Die Konfigurationsdaten sind mit einem Passwort geschützt (Web-Interface).
 - Dialoge auf dem OELD-Display überarbeitet.
 - Neue Tastenbelgung
 - Umstallung Betriebssystem auf Debian 12 / Python 3.11.
 - Ersatz der veralteten Python Bibliotheken.
 - Anpassungen lora.c Compileroptionen
 - Modul HMI.py in Button.py und Display.py aufgeteilt.
-- Button.py: neue Lib lgoio, Tastenbelegung neu 1:Status, 2: Pkt Info, 3: Config  4: Menu up, 4 Menu Down 
+- Button.py: neue Lib lgoio, Tastenbelegung neu 1:Status, 2: Pkt Info, 3: Config  4: Menu up, 4 Menu Down
 - Display.py: neue Lib oled-txt (Ersatz für die veraltete Adafruit-SSD1306 Lib)
 
 ## Copyright
@@ -32,11 +34,11 @@ unter <https://github.com/swiss-artg/LoRa-APRS_RPI-iGate> zum Download zur Verfu
 
 ## Bausatz LoRa APRS-iGate RPI-Aufsteckplatione
 
-Di SWISS-ARTG stellt bietet einen Bausatz (Platine und alle Bauteile, solange Vorrat) an. Interessenten melden sich unter <info@swiss-artg.ch> oder beim Autor.
+Die SWISS-ARTG stellt bietet einen Bausatz (Platine und alle Bauteile, solange Vorrat) an. Interessenten melden sich unter <info@swiss-artg.ch> oder beim Autor.
 
 ### Bestückung RPI-Board
 
-Schema, Stückliste und Aufbauanleitung sind auf der SWISS-ARTG Webseite oder im Git-Repository verfügbar.
+Schema, Stückliste und Aufbauanleitung sind auf der SWISS-ARTG Webseite oder im Git-Repository verfügbar. Eine Bestückungsanleitung ist im Git Repository verfügbar.
 
 ### Modifikation RPI-Board
 
@@ -71,13 +73,13 @@ auf dem OLED-Display.
 
 ## Konfiguration
 
-Die Konfiguration der persönlichen Daten (Rufzeichen, Koordinaten etc.) erfolgt über einen Web-Browser: 
+Die Konfiguration der persönlichen Daten (Rufzeichen, Koordinaten etc.) erfolgt über einen Web-Browser:
 
 - Adresse <http://<IP-Adresse>:5000>, Reiter Konfiguration
 - Abfrage Benutzer und Passwort. Als Benutzername wird das iGate Rufzeichen verwendet.
   - Default Benutzer:  "NOCALL", Passwort "geheim".
-  - Das Passwort kann im Konfigurationsmenu geändert werden. 
-- Trage iGate Rufzeichen, den Passcode und die Standortdaten im Konfigurations-Formular ein 
+  - Das Passwort kann im Konfigurationsmenu geändert werden.
+- Trage iGate Rufzeichen, den Passcode und die Standortdaten im Konfigurations-Formular ein
 und speichere die Daten. Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.ini abgespeichert.
 
 ### Spezielle Parameter
@@ -98,11 +100,13 @@ Das Terminal (Konsole) kann über SSH oder direkt mit Bildschirm und Tastatus am
 
 - sudo systemctrol enable igate.service
 
-## Funkion der 5 Tasten 
+<div style="page-break-after: always;"></div>
+
+## Funkion der 5 Tasten
 
 Die drei unteren Tasten auf dem RPI-Board wählen den Anzeigemode
   
-- Taste links >  Status 
+- Taste links >  Status
 - Taste mitte >  Konfiguration
 - Taste rechts > Letzte Meldung
   
@@ -111,6 +115,7 @@ Die beiden oberen Tasten unter dem Display (Menu vor/zurück) ermöglichen den s
 ### Hardwarekonfiguration
 
 Der LoRa Treiber erwartet folgende Hardwarekonfiguration (File LORA/lora.c)
--	int ssPin = 10; // ChipSelect  BCM 8
--	int dio0  = 21; // IRQ  BCM 5
--	int RST   = 22; // RESET BCM 6
+
+- int ssPin = 10; // ChipSelect  BCM 8
+- int dio0  = 21; // IRQ  BCM 5
+- int RST   = 22; // RESET BCM 6

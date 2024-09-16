@@ -1,9 +1,9 @@
 /var/log/iGate.log {
 	daily
-	rotate 10
-	compress
-	delaycompress
+	rotate 7
 	missingok
 	notifempty
+	compress
 	copytruncate
 }
+

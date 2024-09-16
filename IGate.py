@@ -28,7 +28,6 @@ from datetime import timezone
 import datetime
 import warnings
 import subprocess
-#import RPi.GPIO as GPIO
 import urllib.request
 
 myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
@@ -136,7 +135,6 @@ def main() :
 	logging.info("IGate started")
 
 	init()
-	#Display.display(0)
 
 	while(True) :
 		LoraRx.loraRX()

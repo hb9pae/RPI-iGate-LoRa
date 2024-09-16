@@ -154,7 +154,7 @@ def mkConfig(file) :
 
 		# ---- Write Configuration Template 
 		_conf=configparser.ConfigParser()
-		_conf["APRS-IS"] = {
+		_conf["APRS"] = {
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
 			"Lat" : "47.5", "Lon" : "8.5", "height" : "399",\
 			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\

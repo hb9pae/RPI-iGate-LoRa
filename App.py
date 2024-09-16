@@ -19,20 +19,7 @@ __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__ = "hb9pae@gmail.com"
 
-myconf = Config.getConfig(Config.myConfig)
 
-
-App = Flask(__name__)
-App.logger.removeHandler(default_handler)
-
-App.config['BASIC_AUTH_USERNAME'] = myconf.get("APRS").get("call")
-App.config['BASIC_AUTH_PASSWORD'] = myconf.get("APRS").get("secret")
-
-basic_auth = BasicAuth(App)
-
-
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
 
 def isdirty() :
 	if Config.dirtyFlag :
@@ -74,6 +61,22 @@ def saveconfig(newconf) :
 	config["APRS"] = newconf
 	with open(Config.myConfig, "a") as configfile :
 		config.write(configfile)
+
+
+
+myconf = Config.getConfig(Config.myConfig)
+
+App = Flask(__name__)
+App.logger.removeHandler(default_handler)
+#pdb.set_trace()
+
+App.config['BASIC_AUTH_USERNAME'] = myconf.get("APRS").get("call")
+App.config['BASIC_AUTH_PASSWORD'] = myconf.get("APRS").get("secret")
+
+basic_auth = BasicAuth(App)
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @App.route("/log/",  methods=['GET', 'POST'] )
 def log() :
@@ -154,4 +157,5 @@ def wx() :
 
 
 if __name__ == '__main__':
+	init()
 	run("0.0.0.0")
