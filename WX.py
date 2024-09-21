@@ -104,6 +104,7 @@ def wxGraph(rrd) :
 	"LINE1:t1#0000FF:Temperatur",
 	"GPRINT:t1:LAST:Aktuell %5.2lf °C",
 	"GPRINT:t1:AVERAGE:Mittlelwert  %5.2lf °C",
+	"GPRINT:t1:MIN: Minimal %5.2lf °C",
 	"GPRINT:t1:MAX: Maximal %5.2lf °C"
 	)
 
@@ -119,6 +120,7 @@ def wxGraph(rrd) :
 	"LINE1:h1#0000FF:Rel. Feuchtigkeit",
 	"GPRINT:h1:LAST:Aktuell %5.0lf %%",
 	"GPRINT:h1:AVERAGE:Mittlelwert  %5.0lf %%",
+	"GPRINT:h1:MIN: Minimal %5.0lf %%",
 	"GPRINT:h1:MAX: Maximal %5.0lf %%"
 	)
 
@@ -128,10 +130,13 @@ def wxGraph(rrd) :
 	"--watermark=hb9pae@swiss-artg.ch",
 	"-w 800",
 	"--title=Rel. Luftdruck",
+	"--alt-autoscale",
+	"--alt-y-grid",
 	"DEF:p1=%s:baro:AVERAGE" % (rrd),
 	"LINE1:p1#0000FF:Rel. Luftdruck",
 	"GPRINT:p1:LAST:Aktuell %5.0lf hpa",
 	"GPRINT:p1:AVERAGE:Mittlelwert  %5.0lf hpa",
+	"GPRINT:p1:MIN: Minimal %5.0lf hpa",
 	"GPRINT:p1:MAX: Maximal %5.0lf hpa"
 	)
 
