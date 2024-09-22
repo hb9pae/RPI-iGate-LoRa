@@ -85,7 +85,7 @@ def log() :
 	res = subprocess.run(cmd, capture_output=True, text=True)
 	out = res.stdout.split("\n")
 	#pdb.set_trace()
-	return render_template("log.html", content = out, ds = datestring(), dirty=isdirty())
+	return render_template("log.html", refresh = True, content = out, ds = datestring(), dirty=isdirty())
 
 @App.route("/debug/",  methods=['GET', 'POST'] )
 # set breakpoint
@@ -121,7 +121,7 @@ def config() :
 		#pdb.set_trace()
 		Config.dirtyFlag = True
 		return redirect(url_for('status') )
-	return render_template("config.html", content = configlist, ds = datestring(), dirty = isdirty() )
+	return render_template("config.html",  refresh = False, content = configlist, ds = datestring(), dirty = isdirty() )
 
 @App.route('/')
 def status() :
@@ -137,12 +137,12 @@ def status() :
 		"Baken Intervall": Config.BEACONINTERVAL, "Baken Meldung": Config.BEACONMESSAGE, "Uptime": elapsedTime()
 	}
 
-	return render_template("status.html", content = varlist, ds = datestring(), dirty = isdirty())
+	return render_template("status.html",  refresh = True, content = varlist, ds = datestring(), dirty = isdirty())
 
 @App.route('/about/')
 def about() :
 	#pdb.set_trace()
-	return render_template('about.html', ds = datestring(), dirty = isdirty())
+	return render_template('about.html',  refresh = True, ds = datestring(), dirty = isdirty())
 
 @App.route('/wx/')
 def wx() :
@@ -152,7 +152,7 @@ def wx() :
 		wx = "Show"
 	else :
 		wx = "Hide"
-	return render_template('wx.html', content = wxlist, WxData = wx, ds = datestring(), dirty = isdirty())
+	return render_template('wx.html',  refresh = True, content = wxlist, WxData = wx, ds = datestring(), dirty = isdirty())
 	#pdb.set_trace()
 
 
