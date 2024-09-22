@@ -5,23 +5,28 @@ Revision: 2023-09-09, Version 1.0.1 <br>
 Revision: 2023-09-10, Version 1.0.1a    Typo <br>
 Revision: 2023-09-13, Version 1.0.1b    Typo <br>
 Revision: 2024-03-24  Version 1.2       Boardrevision <br>
-Revision: 2024-09-10  Version 1.3       Debian 12 Paket
+Revision: 2024-09-19  Version 1.3       Debian 12 Paket
+
+## Projektdokumentation
+
+Die Projektdokumentation steht unter <https://cloud.hoststar.ch/s/GytsTsQSYSoyAXk> zum Download zur Verfügung.
 
 ## Voraussetzungen
 
 Diese Installationsanleitung basiert auf:
+
 - Raspberry PI Modell 3 oder 4
 - Raspbian Debian GNU/Linux 12 (bookworm)
 - Python Version 3.12
 - LoRa iGate Aufsteckboard swiss-artg.ch (modifiziert oder Version 2)
-- Erstelle eine SD-Karte (> 8 GB) mit einem Benutzer "pi", erlaube den Zugriff über SSH
+- SD-Karte (> 8 GB) mit einem Benutzer "pi", Zugriff über SSH freigegeben
 
 ### Modifikation RPI-Board
 
 Die neue Version vom RPI-Board muss nicht mehr modifiziert werden. Versions-Beschriftung
 oberhalb Diode D1: «231125».  
 
-Das alte RPI-Board (Ohne Versionsbeschriftung) der SWISS-ARTG muss für den Interrupt-Betrieb
+Das alte RPI-Board der SWISS-ARTG (ohne Versionsbeschriftung) muss für den Interrupt-Betrieb
 modifiziert werden:
 
 - Verbinde Pin14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header.
@@ -57,7 +62,7 @@ Wir erstellen für den User "pi" eine virtuelle Python Umgebung für die Applika
 Installiere die Sourcen (als User "pi"):
 
 - cd /opt/
-- git clone <https://github.com/hb9pae/RPI-iGate-LoRa.git>
+- git clone <https://github.com/swiss-artg/LoRa-APRS_RPI-iGate.git>
 - cd /RPI-iGate-LoRa
 
 ### Die Python3 Pakete, werden als Benutzer pi innerhalb der virt. Umgebung "lora" installiert
@@ -117,7 +122,7 @@ Wir testen die Bibliothek
 ''' $ ./lora_app.exe test
 
 SX1276 detected, starting.
-Print Register 
+Print Register
 Version: 0x12
 FRF_MSB: 0x6c
 FRF_MID: 0x71

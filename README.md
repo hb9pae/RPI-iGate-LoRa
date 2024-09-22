@@ -29,8 +29,15 @@ als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  <https://www.sw
 
 ## Copyright
 
-Das hier dokumentierte Programm ist Open Source, der Programmcode ist frei verfuegbar und steht  
-unter <https://github.com/swiss-artg/LoRa-APRS_RPI-iGate> zum Download zur Verfuegung.
+Das hier dokumentierte Programm ist Open Source, der Programmcode ist frei verfuegbar.
+
+## Projektdokumentation
+
+- Quellprogramme <https://github.com/swiss-artg/LoRa-APRS_RPI-iGate>
+- Beschreibungen unter <https://cloud.hoststar.ch/s/GytsTsQSYSoyAXk>
+  - Imagedatei zum Raspberry PI Version 3+ / 4:
+  - Schema, Stückliste, Aufbauanleitung
+  - Kurzbeschreibung und Installationsanleitung
 
 ## Bausatz LoRa APRS-iGate RPI-Aufsteckplatione
 
@@ -50,6 +57,8 @@ Verbinde dazu Pin 14 vom RFM96W (DIO 0) mit Pin 11 (BCM17) vom RPI 40-pol Header
 ### Wetterstation
 
 Falls ein Sensor BME280 angeschlossen und aktiviert ist ("SENSOR BME280 = TRUE" wird der Sensor alle 5 Minuten abgefragt. Ist das FLag "Wx-Data = TRUE" werden die Sensordaten auch an APRS.FI gesendet. Die Sensordaten werden intern im Menue "WETTER" angezeigt.
+
+<div style="page-break-after: always;"></div>
 
 ## Installation
 
@@ -88,6 +97,8 @@ und speichere die Daten. Die Parameter werden im File /opt/RPI-iGate-LoRa/igate.
 - EN_BME280: True / False: BME280 Sensor angeschlossen
 - EN_WXDATA: True / False: Bestimmt ob die BME280 Sensordaten als WX-Bake an das APRS-IS geliefer werden.
 
+<div style="page-break-after: always;"></div>
+
 ## Bedienung über das Terminal
 
 Das Terminal (Konsole) kann über SSH oder direkt mit Bildschirm und Tastatus am RPI erreicht werden.
@@ -99,8 +110,6 @@ Das Terminal (Konsole) kann über SSH oder direkt mit Bildschirm und Tastatus am
 ### Automatischer Start nach dem Booten
 
 - sudo systemctrol enable igate.service
-
-<div style="page-break-after: always;"></div>
 
 ## Funkion der 5 Tasten
 
