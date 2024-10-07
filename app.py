@@ -112,7 +112,7 @@ def status() :
 		"Last Message":Config.LastMsg,"RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
 		"Packet Err": Config.PktErr, "APRS-IS Message": Config.MsgSent,"RX Count": Config.RxCount,
 		"Wx-Data": Config.EN_WXDATA, "WX Intervall" : Config.WXINTERVAL,
-		"Beacon Intervall": Config.BEACONINTERVAL, "Beacon Message": Config.BEACONMESSAGE, "Uptime": elapsedTime(), 
+		"Beacon Intervall": Config.BEACONINTERVAL, "Uptime": elapsedTime(), 
 		"Version" : Config.Version, "DirtyFlag": Config.dirtyFlag
 	}
 

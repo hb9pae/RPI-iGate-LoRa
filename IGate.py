@@ -5,9 +5,10 @@
 Python Modul  iGate
 - main() Module
 - lädt HMI.py und LoRa-RX Module
+V 1.2.1 vom 2024-10-07
 """
 
-import os, sys
+import os, sys, signal
 import pdb
 import logging
 import LoraRx		# LoRa empfänger
@@ -55,7 +56,7 @@ class RepeatedTimer(object):
 
 def sendBeacon() :
 	logging.info("Send iGate Beacon")
-	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
+	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO  
 	APRS.sendMsg(BeaconTxt)
 
 def igateBeacon() :
@@ -77,12 +78,9 @@ def aelapsedTime() :
 	return("%dh %dm %ds" %(_h,_m,_s))
 
 def checkInternet() :
-	n = 1
-	while not connect() :
-		logging.info("No Internet")
-		HMI.display(4)
-		time.sleep(n)
-		n = n*2
+	logging.info("No Internet")
+	HMI.display(4)
+	time.sleep(5)
 
 def connect():
 	try:
@@ -95,7 +93,7 @@ def init() :
 	Config.StartTime = time.time()
 	myconf = Config.getConfig(Config.myConfig)
 	Config.setGlobals(myconf)
-	checkInternet()
+	#checkInternet()
 	Config.IP = HMI.getip() 
 	#pdb.set_trace()
 	APRS.init()
@@ -120,7 +118,7 @@ def init() :
 
 	webgui = threading.Thread(target=app.run, args=(Config.WEBIP,))
 	webgui.start()
-	logging.info("IGate init done, Webinterface http://:%s:5000", Config.WEBIP)
+	logging.info("IGate init done, Webinterface <RPI-IP>:5000")
 
 	# Send StartBeacon
 	sendBeacon()
@@ -128,7 +126,7 @@ def init() :
 def main() :
 	warnings.filterwarnings("ignore", category=DeprecationWarning)
 	logging.basicConfig(filename='/var/log/iGate.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-	logging.info("IGate started")
+	logging.info("IGate started, V %s ", Config.Version)
 
 	init()
 	while(True) :
@@ -151,20 +149,10 @@ def main() :
 			HMI.initdisplay()
 			Config.DisplayOn += 99999999.9
 		if (Config.reboot) :
-			os.system('sudo reboot')
-		if (Config.ReadBME280) :
-			Config.ReadBME280 = False
-			WX.BMEInterval()
-		if (Config.WxReport) :
-			Config.WxReport = False
-			WX.WxReport()
-		if (Config.Beacon) :
-			Config.Beacon = False
-			sendBeacon()
+			Config.reboot = False
+			pid = os.getpid()
+			os.kill(pid, signal.SIGTERM)
 
-	HMI.initdisplay()
-	GPIO.cleanup()
-	main()
 
 if __name__ == "__main__":
 	main()

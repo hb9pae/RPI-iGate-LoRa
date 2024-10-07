@@ -14,7 +14,7 @@ import re
 import datetime
 
 
-__version__     = "1.1.1"
+__version__     = "1.2.1"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
@@ -60,7 +60,6 @@ LON = 0.0
 LAT = 0.0
 HEIGHT = 0
 BEACONINTERVAL = 600
-BEACONMESSAGE = "-"
 EN_BME280 = False
 
 dirtyFlag = False
@@ -146,8 +145,8 @@ def mkConfig(file) :
 		_conf["APRS-IS"] = {
 			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
 			"Lat" : "47.5", "Lon" : "8.5", "height" : "399",\
-			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\
-			"EN_WxData" : "False", "WxInterval" : "300", "WebIP" : "127.0.0.1"
+			"BeaconInterval" : "900", "EN_BME280" : "False",\
+			"EN_WxData" : "False", "WebIP" : "0.0.0.0"
 			}
 		with open(file, 'a') as configfile:
 			_conf.write(configfile)

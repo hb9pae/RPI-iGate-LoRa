@@ -4,7 +4,7 @@
 """ Lora Package handler, prepare headr info and send it to APRS-IS 
 """
 
-__version__ = "1.0.2"
+__version__ = "1.2.1"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__ = "hb9pae@gmail.com"
@@ -32,7 +32,13 @@ def gotPacket(buffer) :
 	Config.PktRSSI = buffer[2]
 	Config.RSSI = buffer[3]
 	Config.SNR = buffer[4]
-	message="".join(map(chr,buffer[0]))
+	
+	message = "Invalid:"
+	try :
+		message="".join(map(chr,buffer[0]))
+	except :
+		logging.info("RX-Buffer invalid Buffer: %s" % str(buffer[0]) )
+
 	#pdb.set_trace()
 	# Einige Tracker schliessen den MSG String mit einem 0x00 ab, wir entfernen non-ASCII am Ende des Strings
 	lastchar = ord(message[-1])
@@ -46,7 +52,7 @@ def gotPacket(buffer) :
 	addrend = message.find(":",5,40)
 	# add iGate call to path
 	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
-	APRS.sendMsg(message + (" " * random.randint(0,5)) )
+	APRS.sendMsg(message)
 
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)
