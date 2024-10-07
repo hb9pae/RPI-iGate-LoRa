@@ -99,7 +99,7 @@ def init() :
 	logging.info("Beacon Timer started Interval %s sec.", Config.BEACONINTERVAL )
 
 	if (Config.EN_BME280) :
-		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), WX.readBME280 ) 
+		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), WX.BMEInterval ) 
 		BMETimer.start() 
 		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
 
