@@ -45,6 +45,7 @@ def BMEInterval() :
 	wxGraph(Config.WXrrd)
 
 def readBME280() :
+	#pdb.set_trace()
 	if not (Config.EN_BME280) :
 		return				# no BME280 available
 	if not (os.path.exists(Config.WXrrd)) :
@@ -65,6 +66,9 @@ def readBME280() :
 	except :
 		Config.EN_BME280 = False
 		Config.EN_WXDATA = False
+		temp = 0
+		press_nn = 0
+		hum = 0
 		logging.info("BME280 not available, BME280 and WX-DATA disabled")
 
 	Config.Temperature = round(temp,2)

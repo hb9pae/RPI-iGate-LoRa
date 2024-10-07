@@ -59,15 +59,6 @@ def sendBeacon() :
 	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO  
 	APRS.sendMsg(BeaconTxt)
 
-def igateBeacon() :
-	Config.Beacon = True
-
-def readBME280() :
-	Config.ReadBME280 = True
-
-def WxReport() :
-	Config.WxReport = True
-
 def aelapsedTime() :
 	end_time = time.time()
 	tmp = end_time - Config.StartTime
@@ -100,19 +91,19 @@ def init() :
 	#Config.IP = HMI.getip()
 	HMI.initbutton()
 	LoraRx.init()
-	WX.readBME280()
+	#WX.readBME280()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
-	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), igateBeacon ) 
+	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
 	iGateTimer.start()
 	logging.info("Beacon Timer started Interval %s sec.", Config.BEACONINTERVAL )
 
 	if (Config.EN_BME280) :
-		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), readBME280 ) 
+		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), WX.readBME280 ) 
 		BMETimer.start() 
 		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
 
-		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WxReport ) 
+		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WX.WxReport ) 
 		WxTimer.start()
 		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
 
@@ -129,6 +120,7 @@ def main() :
 	logging.info("IGate started, V %s ", Config.Version)
 
 	init()
+	print("BME %s", Config.BMEINTERVAL)
 	while(True) :
 		msg=LoraRx.loralib.recv()
 		if msg[1] > 0 and msg[5] > 1:
