@@ -120,7 +120,7 @@ def main() :
 	logging.info("IGate started, V %s ", Config.Version)
 
 	init()
-	print("BME %s", Config.BMEINTERVAL)
+	#print("BME %s", Config.BMEINTERVAL)
 	while(True) :
 		msg=LoraRx.loralib.recv()
 		if msg[1] > 0 and msg[5] > 1:

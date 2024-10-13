@@ -41,8 +41,9 @@ def createRRD(file) :
 	)
 
 def BMEInterval() :
-	readBME280()
-	wxGraph(Config.WXrrd)
+	if (Config.EN_BME280) :
+		readBME280()
+		wxGraph(Config.WXrrd)
 
 def readBME280() :
 	#pdb.set_trace()
