@@ -58,18 +58,9 @@ class RepeatedTimer(object):
 		self.is_running = False
 
 def sendBeacon() :
-	logging.info("Send iGate Beacon")
+	# logging.info("Send iGate Beacon")
 	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
-
-def igateBeacon() :
-	Config.Beacon = True
-
-def readBME280() :
-	Config.ReadBME280 = True
-
-def WxReport() :
-	Config.WxReport = True
 
 def aelapsedTime() :
 	end_time = time.time()
@@ -106,19 +97,19 @@ def init() :
 	Button.init()
 	APRS.init()
 	LoraRx.init()
-	WX.readBME280()
+	#WX.readBME280()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
-	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), igateBeacon ) 
+	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
 	iGateTimer.start()
 	logging.info("Beacon Timer started Interval %s sec.", Config.BEACONINTERVAL )
 
 	if (Config.EN_BME280) :
-		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), readBME280 ) 
+		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), WX.readBME280 ) 
 		BMETimer.start() 
 		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
 
-		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WxReport ) 
+		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WX.WxReport ) 
 		WxTimer.start()
 		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
 
@@ -135,35 +126,39 @@ def main() :
 	logging.info("IGate started")
 
 	init()
+	Config.loopmax = 0
+	loopcnt = 0
 
 	while(True) :
+		starttime = time.time()
+		loopcnt += 1
+
 		LoraRx.loraRX()
-		#print("Menue: %d, Last: %d" % (Config.Menu, Config.MenuLast) )
 
-		if (Config.Menu < 10) :
-			Display.display(Config.Menu)
+		if (loopcnt > 9) : 
+			extmain()
 
-		to = int(time.time() - Config.DisplayOn) 
-		if to > Config.DisplayTimeout :
-			Display.clear()
-			#pdb.set_trace()
-			Config.DisplayOn += 99999999.9
+		looptime = time.time() - starttime
+		if (looptime > Config.loopmax) :
+                        Config.loopmax = looptime
+		time.sleep(0.001) 
 
-		if (Config.reboot) :
-			Config.reboot = False
-			pid = os.getpid()
-			os.kill(pid, SIGKILL)
-		if (Config.ReadBME280) :
-			Config.ReadBME280 = False
-			WX.BMEInterval()
-		if (Config.WxReport) :
-			Config.WxReport = False
-			WX.WxReport()
-		if (Config.Beacon) :
-			Config.Beacon = False
-			sendBeacon()
+def extmain() :
+	if (Config.Menu < 10) :
+		Display.display(Config.Menu)
 
-		time.sleep(0.05) 
+	to = int(time.time() - Config.DisplayOn) 
+	if to > Config.DisplayTimeout :
+		Display.clear()
+		#pdb.set_trace()
+		Config.DisplayOn += 99999999.9
+
+	if (Config.reboot) :
+		Config.reboot = False
+		pid = os.getpid()
+		os.kill(pid, SIGKILL)
+
+	loopcnt = 0
 
 if __name__ == "__main__":
 	main()

@@ -14,7 +14,7 @@ import re
 import datetime
 import time
 
-__version__     = "1.3.0"
+__version__     = "1.3.0-FAST"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
