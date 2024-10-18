@@ -58,11 +58,10 @@ def display(page) :
 	elif (page == 2) :
 		oled.layout = Layout64.layout_5small()
 		oled.auto_show = False
-		oled.text("LoRa-RX: " + Config.LastRx[-9:], 1)
-		#pdb.set_trace()
-		oled.text(" From: " + Config.From.ljust(10), 2)
-		oled.text(" To:   " + Config.To.ljust(10), 3)
-		oled.text(" Cnt:  " + str(Config.PktSize), 4)
+		oled.text("LoRa-RX", 1)
+		oled.text("AT:" + Config.LastRx[-9:],2)
+		oled.text("MSG:", 3)
+		oled.text(Config.LastMsg, 4)
 		oled.text("Stat   Pack   Conf",5)
 
 	elif (page == 3) :

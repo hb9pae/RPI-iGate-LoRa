@@ -45,68 +45,19 @@ def loraRX():
 			addrend = message.find(":",5,40)
 			message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
 			APRS.sendMsg(message)
-			Config.LastMsg =  message
-			#pdb.set_trace()
 
+			Config.LastMsg =  message
 			now = datetime.now()
 			Config.LastRx = now.strftime("%Y-%m-%d %H:%M:%S") 
 			Config.RxCount += 1
-			logging.info("RX Packet received, Size:%d, PRSSI:%d, RSSI:%d, SNR:%d, RxCount:%d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR, Config.RxCount))
+			#logging.info("RX Packet received, Size:%d, PRSSI:%d, RSSI:%d, SNR:%d, RxCount:%d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR, Config.RxCount))
 		except:
 			Config.RxErr += 1
 			logging.info("Error read RX-Buffer %s, Size: %d" % (buffer[0], buffer[1]) )
 
-			lock.release()
-		try :
-			pkt = aprslib.parse(message)
-			Config.From = pkt.get("from")
-			Config.To = pkt.get("to")
-			Display.display(2)
-			#pdb.set_trace()
-		except:
-			#pdb.set_trace()
-			logging.info("Error RX-Buffer validation %s, Size: %d" % (buffer[0], buffer[1]) )
-	else:
-		return
-
-"""
-def loraRX() :
-	msg=loralib.recv()
-	if msg[1] > 0 and msg[5] == 0 :
-		gotPacket(msg)
-
-def gotPacket(buffer) :
-	now = datetime.now()
-	#print("RX Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (buffer[1], buffer[2], buffer[3], buffer[4]) )
-	Config.PktSize = buffer[1]
-	Config.PktRSSI = buffer[2]
-	Config.RSSI = buffer[3]
-	Config.SNR = buffer[4]
-	try :
-		message ="".join(map(chr,buffer[0][3:]))
-		message = message.rstrip("\x00")
-		Config.LastRx = now.strftime("%Y-%m-%d %H:%M:%S") 
-		Config.RxCount += 1
-		logging.info("RX Packet received, Size:%d, PRSSI:%d, RSSI:%d, SNR:%d, RxCount:%d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR, Config.RxCount))
-	except:
-		Config.RxError += 1
-		logging.info("Error read RX-Buffer %s, Size: %d" % (buffer[0], buffer[1]) )
-	try :
-		pkt = aprslib.parse(message)
-		Config.From = pkt.get("from")
-		Config.To = pkt.get("to")
+		lock.release()
 		Display.display(2)
-		#pdb.set_trace()
-	except:
-		#pdb.set_trace()
-		logging.info("Error RX-Buffer validation %s, Size: %d" % (buffer[0], buffer[1]) )
 
-	# add iGate call to path
-	addrend = message.find(":",5,40)
-	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
-	Config.LastMsg =  message
-	APRS.sendMsg(message)
-"""
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)
 	Config.RxCount =0

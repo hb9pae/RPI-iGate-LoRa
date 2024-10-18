@@ -26,8 +26,6 @@ def init() :
 	logging.debug("APRS init() done") 
 
 def sendMsg( msg ) :
-	logging.info("APRS Packet to send: %s" , msg)
-	#logging.info("MSG: %s", msg)
 	if (Config.EN_APRSIS) :
 		#pdb.set_trace()
 		if not Config.AIS._connected  :
@@ -45,6 +43,8 @@ def sendMsg( msg ) :
 	else :
 		logging.info("APRS-IS upload: %s",  Config.EN_APRSIS)
 		Config.AprsStat = "Test"
+
+	logging.info("APRS Packet sent: %s" , msg)
 	Config.LastPkt = msg
 
 

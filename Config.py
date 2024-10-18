@@ -4,6 +4,7 @@
 """
 Python Modul Config.py
 Enthält alle Globalen Variablen
+24-10-18: V 1.3.01  fast variante
 """
 
 import configparser
@@ -14,7 +15,7 @@ import re
 import datetime
 import time
 
-__version__     = "1.3.0-FAST"
+__version__     = "1.3.01"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
@@ -119,6 +120,10 @@ def setGlobals(_conf) :
 					varname = True
 				else :
 					varname = False
+			if (key.lower() == "call" ):
+				#pdb.set_trace()
+					varname = varname.upper()
+
 			globals()[key.upper()] = varname
 		POS = grad2min(float(LAT), float(LON) )
 
