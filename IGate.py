@@ -59,7 +59,7 @@ class RepeatedTimer(object):
 
 def sendBeacon() :
 	# logging.info("Send iGate Beacon")
-	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO + " " + str(Config.RxCount) 
+	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.BEACONMESSAGE + " " + str(Config.RxCount) 
 	APRS.sendMsg(BeaconTxt)
 
 def aelapsedTime() :
@@ -72,12 +72,9 @@ def aelapsedTime() :
 	return("%dh %dm %ds" %(_h,_m,_s))
 
 def checkInternet() :
-	n = 1
-	while not connect() :
+	if not connect() :
 		logging.info("No Internet")
 		Display.display(4)
-		time.sleep(n)
-		n = n*2
 
 def connect():
 	try:
@@ -126,11 +123,9 @@ def main() :
 	logging.info("IGate started")
 
 	init()
-	Config.loopmax = 0
 	loopcnt = 0
 
 	while(True) :
-		starttime = time.time()
 		loopcnt += 1
 
 		LoraRx.loraRX()
@@ -138,9 +133,6 @@ def main() :
 		if (loopcnt > 9) : 
 			extmain()
 
-		looptime = time.time() - starttime
-		if (looptime > Config.loopmax) :
-                        Config.loopmax = looptime
 		time.sleep(0.001) 
 
 def extmain() :

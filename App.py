@@ -134,8 +134,8 @@ def status() :
 		"Lezte Meldung":Config.LastMsg,"- Empfangen":Config.LastRx, "Signal RSSI": Config.RSSI, "Pkt RSSI": Config.PktRSSI, "SNR" : Config.SNR, 
 		"Fehler": Config.RxErr, "APRS-IS Meldung": Config.MsgSent,"RX Zähler": Config.RxCount,
 		"Wetter-Daten": Config.EN_WXDATA, "Wetter Intervall" : Config.WXINTERVAL,
-		"Baken Intervall": Config.BEACONINTERVAL, "Baken Meldung": Config.BEACONMESSAGE, "Uptime": elapsedTime(),
-		"Max Looptime" : Config.loopmax	}
+		"Baken Intervall": Config.BEACONINTERVAL, "Baken Meldung": Config.BEACONMESSAGE, "Uptime": elapsedTime()
+		}
 
 	return render_template("status.html",  refresh = True, content = varlist, ds = datestring(), dirty = isdirty())
 

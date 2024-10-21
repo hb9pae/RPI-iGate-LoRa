@@ -1,4 +1,5 @@
-#! /usr/bin/python3
+#! /usr/bin/python3Info
+
 # -*- coding: utf-8 -*-
 
 """
@@ -64,7 +65,6 @@ MsgSent = 0
 # Variablen aus igate.ini ----
 CALL = "NOCALL"
 PASSCODE = ""
-INFO = "" 
 EN_APRSIS = False
 LON = 0.0
 LAT = 0.0
@@ -160,9 +160,9 @@ def mkConfig(file) :
 		# ---- Write Configuration Template 
 		_conf=configparser.ConfigParser()
 		_conf["APRS"] = {
-			"Call": "NOCALL", "Passcode" : "123456", "Info" : "LoRa iGate", "EN_APRSIS" : "False",\
+			"Call": "NOCALL", "Passcode" : "123456", "EN_APRSIS" : "False",\
 			"Lat" : "47.5", "Lon" : "8.5", "height" : "399",\
-			"BeaconInterval" : "600", "BeaconMessage" : "-", "EN_BME280" : "False",\
+			"BeaconInterval" : "600", "BeaconMessage" : "LoRa iGate SWISS-ARTG", "EN_BME280" : "False",\
 			"EN_WxData" : "False", "WxInterval" : "300", "SECRET" : "geheim", "WebIP" : "0.0.0.0"
 			}
 		with open(file, 'a') as configfile:
