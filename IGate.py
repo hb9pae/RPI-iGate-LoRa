@@ -126,11 +126,10 @@ def main() :
 	logging.info("IGate started")
 
 	init()
-	Config.loopmax = 0
+
 	loopcnt = 0
 
 	while(True) :
-		starttime = time.time()
 		loopcnt += 1
 
 		LoraRx.loraRX()
@@ -138,9 +137,6 @@ def main() :
 		if (loopcnt > 9) : 
 			extmain()
 
-		looptime = time.time() - starttime
-		if (looptime > Config.loopmax) :
-                        Config.loopmax = looptime
 		time.sleep(0.001) 
 
 def extmain() :
