@@ -5,29 +5,27 @@
 Python Modul  iGate
 - main() Module
 - lädt HMI.py und LoRa-RX Module
+V 1.2.2 vom 2024-10-22
 V 1.2.1 vom 2024-10-07
 """
 
 import os, sys, signal
 import pdb
-import logging
+import Utils
 import LoraRx		# LoRa empfänger
 import HMI		# Display und Tasten
 import Config
 import APRS
+import App
 import WX
 import time
 import threading
 from threading import Timer
 from datetime import timezone
 import datetime
-import app
 import warnings
 import subprocess
 import RPi.GPIO as GPIO
-import urllib.request
-
-myLog = os.path.dirname(os.path.abspath(__name__)) + "/iGate.log"
 
 class RepeatedTimer(object):
 	def __init__(self, interval, function, *args, **kwargs):
@@ -55,85 +53,44 @@ class RepeatedTimer(object):
 		self.is_running = False
 
 def sendBeacon() :
-	logging.info("Send iGate Beacon")
-	BeaconTxt = Config.CALL +">APRS,TCPIP:=" + Config.POS[0] + "L" + Config.POS[1] + "&PHG0000 " + Config.INFO  
+	BeaconTxt = Config.ConfigDict["call"] +">APRS,TCPIP:=" + Config.ConfigDict["pos"][0] + "L" + Config.ConfigDict["pos"][1] + "&PHG0000 " + Config.ConfigDict["beaconmsg"] 
 	APRS.sendMsg(BeaconTxt)
-
-def aelapsedTime() :
-	end_time = time.time()
-	tmp = end_time - Config.StartTime
-	_h = tmp//3600
-	tmp = tmp - 3600 * _h
-	_m = tmp //60
-	_s = tmp - 60 * _m
-	return("%dh %dm %ds" %(_h,_m,_s))
-
-def checkInternet() :
-	logging.info("No Internet")
-	HMI.display(4)
-	time.sleep(5)
-
-def connect():
-	try:
-		urllib.request.urlopen('http://google.com') #Python 3.x
-		return True
-	except:
-		return False
 
 def init() :
 	Config.StartTime = time.time()
-	myconf = Config.getConfig(Config.myConfig)
-	Config.setGlobals(myconf)
+	Config.initConfigDict(Config.getConfig())
 	#checkInternet()
-	Config.IP = HMI.getip() 
-	#pdb.set_trace()
+	Config.ConfigDict["webip"] = Utils.getip()
 	APRS.init()
-	#Config.IP = HMI.getip()
 	HMI.initbutton()
 	LoraRx.init()
 	#WX.readBME280()
+	#pdb.set_trace()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
-	iGateTimer = RepeatedTimer(int(Config.BEACONINTERVAL), sendBeacon ) 
+	iGateTimer = RepeatedTimer(int(Config.ConfigDict["beaconinterval"]), sendBeacon ) 
 	iGateTimer.start()
-	logging.info("Beacon Timer started Interval %s sec.", Config.BEACONINTERVAL )
+	Utils.logEvent("Beacon Timer started Interval %s sec." % (Config.ConfigDict["beaconinterval"]) )
 
-	if (Config.EN_BME280) :
-		BMETimer = RepeatedTimer(int(Config.BMEINTERVAL), WX.BMEInterval ) 
+	if (Config.ConfigDict["en_bme280"]) :
+		BMETimer = RepeatedTimer(int(Config.BMEInterval), WX.BMEInterval ) 
 		BMETimer.start() 
-		logging.info("BME280 Timer started Interval %s sec.", Config.BMEINTERVAL )
+		Utils.logEvent("BME280 Timer started Interval %s sec." % (Config.ConfigDict["bmeinterval"]) )
 
-		WxTimer = RepeatedTimer(int(Config.WXINTERVAL), WX.WxReport ) 
+		WxTimer = RepeatedTimer(int(Config.ConfigDiConfig.ConfigDict["wxinterval"] ), WX.WxReport ) 
 		WxTimer.start()
-		logging.info("Wx Timer started Interval %s sec.", Config.WXINTERVAL )
+		Utils.logEvent("Wx Timer started Interval %s sec." % (Config.ConfigDict["wxinterval"]) )
 
-	webgui = threading.Thread(target=app.run, args=(Config.WEBIP,))
+	webgui = threading.Thread(target=App.run, args=(Config.ConfigDict["webip"],))
 	webgui.start()
-	logging.info("IGate init done, Webinterface <RPI-IP>:5000")
+	Utils.logEvent("LoRa APRS iGate init done, Webinterface %s:5000" % (Config.ConfigDict["webip"]) )
 
 	# Send StartBeacon
 	sendBeacon()
+	#pdb.set_trace()
 
-def main() :
-	warnings.filterwarnings("ignore", category=DeprecationWarning)
-	logging.basicConfig(filename='/var/log/iGate.log', encoding='utf-8', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-	logging.info("IGate started, V %s ", Config.Version)
-
-	init()
-	#print("BME %s", Config.BMEINTERVAL)
-	while(True) :
-		msg=LoraRx.loralib.recv()
-		if msg[1] > 0 and msg[5] > 1:
-			PktErr += 1
-			logging.info("Packet received, CRC Errors: %d", PktErr)
-			logging.info("Packet Size [0] %d, CRC [5] %d", msg[1], msg[5])
-		if msg[1] > 0 and msg[5] == 0 :
-			logging.info("Packet received, no CRC error")
-			#pdb.set_trace()
-			LoraRx.gotPacket(msg)
-			HMI.display(3)  # display received Packaage
-		time.sleep(0.1) 
-
+def extCmd() :
+	while True :
 		if (Config.Menu < 5) :
 			HMI.display(Config.Menu)
 			Config.Menu = 99
@@ -145,6 +102,29 @@ def main() :
 			pid = os.getpid()
 			os.kill(pid, signal.SIGTERM)
 
+		time.sleep(0.5) 
+		#print("LoopMax %f" % Config.loopmax)
+		#Config.loopmax =  0
+
+
+def main() :
+	warnings.filterwarnings("ignore", category=DeprecationWarning)
+	Utils.logEvent("IGate started, V %s" % (Config.Version) )
+
+	init()
+	#pdb.set_trace()
+	loopcnt = 0		#Verzögere die Abarbeitung Display und Button Funktionen
+	Config.loopmax=0
+	t_extcmd = threading.Thread(target=extCmd, args=())
+	t_extcmd.start()
+
+	while(True) :
+		#loopstart = time.time()
+		LoraRx.LoraRx()
+		#looptime = time.time() - loopstart
+		#if (looptime > Config.loopmax) :
+		#	Config.loopmax = looptime
+		time.sleep(0.01)
 
 if __name__ == "__main__":
 	main()

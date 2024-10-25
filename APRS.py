@@ -4,63 +4,39 @@
 
 import logging
 import aprslib
-import pdb
-
 import Config
+import Utils
+import pdb
 
 def init() :
 	Config.AprsStat = "Not active"
 	Config.Login = 0
-	if (Config.EN_APRSIS) :
+	if (Config.ConfigDict["en_aprsis"] ) :
 		try :
-			Config.AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
+			Config.AIS = aprslib.IS(Config.ConfigDict["call"], Config.ConfigDict["passcode"], port=14580)
 			Config.AIS.connect()
 			Config.Login += 1
 		except: 
-			logging.info("APRS-IS upload failed")
-	logging.debug("APRS init() done") 
-
-"""
-def sendMsg( msg ) :
-	logging.info("APRS Packet to sent: %s" , msg)
-	logging.info("MSG: %s", msg)
-	if (Config.EN_APRSIS) :
-		try :
-			AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
-			AIS.connect()
-			AIS.sendall(msg)
-			AIS.close()
-			Config.AprsStat = "Active"
-			Config.MsgSent +=1
-		except: 
-			logging.info("APRS-IS upload failed")
-
-	else :
-		logging.debug("APRS-IS upload: %s",  Config.EN_APRSIS)
-		Config.AprsStat = "Test"
-	Config.LastPkt = msg
-"""
+			Utils.logEvent("APRS-IS upload failed")
 
 def sendMsg( msg ) :
-	logging.info("APRS Packet to sent: %s" , msg)
-	#logging.info("MSG: %s", msg)
-	if (Config.EN_APRSIS) :
+	Utils.logRX("APRS Packet to send: %s" %  msg)
+	if (Config.ConfigDict["en_aprsis"]) :
 		#pdb.set_trace()
 		if not Config.AIS._connected  :
-			Config.AIS = aprslib.IS(Config.CALL, Config.PASSCODE, port=14580)
+			Config.AIS = aprslib.IS(Config.ConfigDict["call"], Config.ConfigDicht["passcode"] , port=14580)
 			Config.AIS.connect()
 			Config.Login += 1
-			logging.info("APRS-IS Login")
 		try :
 			Config.AIS.sendall(msg)
 			Config.AprsStat = "Active"
 			Config.MsgSent +=1
 		except: 
-			logging.info("APRS-IS upload failed")
+			Utils.logEvent("APRS-IS upload failed")
 
 	else :
-		logging.info("APRS-IS upload: %s",  Config.EN_APRSIS)
 		Config.AprsStat = "Test"
+
 	Config.LastPkt = msg
 
 

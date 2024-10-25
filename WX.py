@@ -6,8 +6,8 @@ Python Modul  WX
 """
 
 import os, sys
+import Utils
 import pdb
-import logging
 import Config
 import BME280
 import APRS
@@ -17,7 +17,7 @@ import datetime
 
 def writeRRD(file, temperature, pressure, humidity) :
 	rrdtool.update(file, 'N:%f:%f:%f' % (temperature, humidity, pressure))
-	logging.info('Update RRD: N:%f:%f:%f' % (temperature, humidity, pressure))
+	#Utils.logEvent('Update RRD: N:%f:%f:%f' % (temperature, humidity, pressure))
 
 def createRRD(file) :
 	rrdtool.create(file, "--step", "300", "--start", 'N',
@@ -51,13 +51,13 @@ def readBME280() :
 		return				# no BME280 available
 	if not (os.path.exists(Config.WXrrd)) :
 		createRRD(Config.WXrrd)
-		logging.info("Created new RRD-DB: %s" % (Config.WXrrd))
+		Utils.logEvent("Created new RRD-DB: %s" % (Config.WXrrd))
 
-	logging.info("Read BME280")
+	Utils.logEvent("Read BME280")
 	try :
 		_altitude = int(Config.HEIGHT)
 	except:
-		logging.info("Wrong Altitude format, assume 400m asl")
+		Utils.logEvent("Wrong Altitude format, assume 400m asl")
 		_altitude = 400
 
 	try :
@@ -65,12 +65,12 @@ def readBME280() :
 		(temp, press_nn, hum) = BME280.getBME280(_altitude)
 		writeRRD(Config.WXrrd, temp, press_nn, hum)
 	except :
-		Config.EN_BME280 = False
-		Config.EN_WXDATA = False
+		Config.en_bme280  = False
+		Config.en_wxdata = False
 		temp = 0
 		press_nn = 0
 		hum = 0
-		logging.info("BME280 not available, BME280 and WX-DATA disabled")
+		Utils.logEvent("BME280 not available, BME280 and WX-DATA disabled")
 
 	Config.Temperature = round(temp,2)
 	Config.AirPressureNN = round(press_nn,1)
@@ -78,8 +78,8 @@ def readBME280() :
 
 def WxReport() :
 	#pdb.set_trace()
-	if (Config.EN_WXDATA) :
-		logging.info("Prepare WxReport")
+	if (Config.en_wxdata) :
+		Utils.logItem("Prepare WxReport")
 		dt = datetime.datetime.now(datetime.timezone.utc)
 		_DHM = dt.strftime("@%d%H%Mz")
 		_pos = Config.POS[0] + "/" + Config.POS[1] 

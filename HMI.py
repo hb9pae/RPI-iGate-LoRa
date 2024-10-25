@@ -13,14 +13,14 @@ import Adafruit_SSD1306
 import RPi.GPIO as GPIO
 
 import time
-import socket
-import logging
+#import socket
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
 import pdb
+import Utils 
 
 #Importiere Globale Variablen
 import Config
@@ -32,18 +32,6 @@ import Config
 #SW4 = 19	# Packet Display
 #SW5 = 26	# Welcom Menu
 
-
-def getip():
-	st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	try:
-		st.connect(('10.255.255.255', 1))
-		_ip = st.getsockname()[0]
-	except Exception:
-		#pdb.set_trace()
-		_ip = '127.0.0.1'
-	finally:
-		st.close()
-	return(_ip)
 
 def call_sw(channel):
 	menudict = {21:0, 20:0, 16:1, 19:2, 26:3}  # Translate BCM-Pin:Display.Menu 
@@ -113,7 +101,7 @@ def display(page) :
 		draw.rectangle((2, 2, 125, 60 ), outline=255, fill=255)
 		draw.text((25, 1),	"Welcome!",  font=font2, fill=0)
 		draw.text((4, 21),	"LoRA iGate",  font=font1, fill=0)
-		draw.text((4, 35),	 Config.CALL,  font=font1, fill=0)
+		draw.text((4, 35),	 Config.ConfigDict["call"],  font=font1, fill=0)
 		draw.text((4, 49),	"V " + Config.Version  + " (c)HB9PAE",  font=font1, fill=0)
 
 	elif (page == 1) :		# STATUS
@@ -127,8 +115,8 @@ def display(page) :
 		wxH = "{:7.1f}%".format(Config.Humidity)
 		wxP = "{:8.1f}hPa".format(Config.AirPressureNN)
 
-		draw.text((4, 4),	"IP:" + Config.IP, font=font1, fill=255)
-		draw.text((4, 13),	"Call:" + Config.CALL , font=font1, fill=255)
+		draw.text((4, 4),	"IP:" + Config.ConfigDict["webip"], font=font1, fill=255)
+		draw.text((4, 13),	"Call:" + Config.ConfigDict["call"] , font=font1, fill=255)
 		draw.text((4, 22),	"APRS Status: " + Config.AprsStat, font=font1, fill=255)
 		draw.text((4, 31),	"WX:  Temp:   Hum:   Pres."  , font=font1, fill=255)
 		draw.text((4, 40),	str(wxT) + str(wxH) + str(wxP), font=font1, fill=255)
@@ -139,10 +127,10 @@ def display(page) :
 		draw.text((53, 50),   'Conf.',  font=font1, fill=0)
 		draw.text((100, 50),   'Pack.',  font=font1, fill=255)
 
-		draw.text((4, 4),	"Call:   " + Config.CALL, font=font1, fill=255)
-		draw.text((4, 13),	"Position: " + str(Config.LAT) + "/" + str(Config.LON),  font=font1, fill=255)
-		draw.text((4, 22),	"Altitude: " + str(Config.HEIGHT),  font=font1, fill=255)
-		draw.text((4, 31),	"EN-BME280:   " + str(Config.EN_BME280),  font=font1, fill=255)
+		draw.text((4, 4),	"Call:   " + Config.ConfigDict["call"], font=font1, fill=255)
+		draw.text((4, 13),	"Position: " + str(Config.ConfigDict["lat"]) + "/" + str(Config.ConfigDict["lon"]),  font=font1, fill=255)
+		draw.text((4, 22),	"Altitude: " + str(Config.ConfigDict["height"] ),  font=font1, fill=255)
+		draw.text((4, 31),	"EN-BME280:   " + str(Config.ConfigDict["en_bme280"]),  font=font1, fill=255)
 
 	elif (page == 3) :		# PACKET
 		draw.rectangle((x+90, y, x1+90, y1), outline=255, fill=255)
@@ -150,9 +138,9 @@ def display(page) :
 		draw.text((53, 50),   'Conf.',  font=font1, fill=255)
 		draw.text((100, 50),   'Pack.',  font=font1, fill=0)
 
-		draw.text((4, 4),	"Last Message:",  font=font1, fill=255)
+		draw.text((4, 4),	"MSG: "+ Config.LastRx,  font=font1, fill=255)
 		draw.text((4, 13),	Config.LastPkt, font=font1, fill=255)
-		draw.text((4, 22),	"IP:" + Config.IP, font=font1, fill=255)
+		draw.text((4, 22),	"IP:" + Config.ConfigDict["webip"], font=font1, fill=255)
 		draw.text((4, 31),	"APRS Status:  " + Config.AprsStat, font=font1, fill=255)
 
 	elif (page == 4) :		# No IP, check Internet

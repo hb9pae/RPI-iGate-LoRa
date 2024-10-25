@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """ Lora Package handler, prepare headr info and send it to APRS-IS 
+2024-10-18 HB9PAE fast version, tread lock
 """
 
-__version__ = "1.2.1"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__ = "hb9pae@gmail.com"
@@ -13,53 +13,58 @@ __email__ = "hb9pae@gmail.com"
 import loralib
 import time
 import pdb
-import logging
-from threading import Timer
+import Utils
+import threading
 import aprslib
 from datetime import datetime
 import random
-
+import HMI
 import APRS
 import Config
 
+global buffer 
+
+"""
 def wx(name):
-	print("Send new %s!" % name)
-	logging.info("WX sent: %s" % name)
+	Utils.logEvent("WX sent: %s" %  name)
+"""
 
-def gotPacket(buffer) :
-	now = datetime.now() 
-	#logging.debug("RX Size: %d, PRSSI: %d, RSSI: %d, SNR %d" % (buffer[1], buffer[2], buffer[3], buffer[4]) )
-	Config.PktRSSI = buffer[2]
-	Config.RSSI = buffer[3]
-	Config.SNR = buffer[4]
-	
-	message = "Invalid:"
-	try :
-		message="".join(map(chr,buffer[0]))
-	except :
-		logging.info("RX-Buffer invalid Buffer: %s" % str(buffer[0]) )
+def LoraRx():
+	buffer=loralib.recv()
+	lock = threading.Lock()
+	if buffer[1] > 0 and buffer[5] == 0 :
+		lock.acquire()
+		Config.TS = time.time()
+		Config.PktSize = buffer[1]
+		Config.PktRSSI = buffer[2]
+		Config.RSSI = buffer[3]
+		Config.SNR = buffer[4]
+		#pdb.set_trace()
+		_buff = buffer[0][3:]
+		lock.release()
 
-	#pdb.set_trace()
-	# Einige Tracker schliessen den MSG String mit einem 0x00 ab, wir entfernen non-ASCII am Ende des Strings
-	lastchar = ord(message[-1])
-	if (lastchar < 32) :
-		message = message[3:-1]
-	else :
-		message=message[3:]
-	Config.LastMsg=now.strftime("%Y-%m-%d, %H:%M:%S: ") + message
-	Config.RxCount +=1
-	logging.info("RX Packet received, Size:%d, PRSSI:%d, RSSI:%d, SNR:%d, RxCount:%d" % (len(message), Config.PktRSSI, Config.RSSI, Config.SNR, Config.RxCount))
-	addrend = message.find(":",5,40)
-	# add iGate call to path
-	message = message[:addrend] +  ",qAO," + Config.CALL + message[addrend:]
-	APRS.sendMsg(message)
+		message ="".join(map(chr,_buff))
+		message = message.rstrip("\x00")
+		# add iGate call to path
+		addrend = message.find(":",5,40)
+		message = message[:addrend] +  ",qAO," + Config.ConfigDict["call"] + message[addrend:]
+		#pdb.set_trace()
+		APRS.sendMsg(message)
+		Config.LastRx = Utils.datestring()  
+		Config.LastMsg =  message
+		Config.NewMsg = True
+		Config.RxCount += 1
+		time.sleep(0.0001)
 
 def init() :
 	loralib.init(1, Config.Frequ, Config.SR)
 	Config.RxCount =0
-	logging.debug("LoRa RX init done")
-#	pdb.set_trace()
 
+def main() :
+	while(True) :	
+		#pdb.set_trace()
+		loraRX() 
+		time.sleep(0.1)
 
 if __name__ == "__main__":
 	init()
