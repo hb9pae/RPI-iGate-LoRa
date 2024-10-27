@@ -103,8 +103,6 @@ def extCmd() :
 			os.kill(pid, signal.SIGTERM)
 
 		time.sleep(0.5) 
-		#print("LoopMax %f" % Config.loopmax)
-		#Config.loopmax =  0
 
 
 def main() :
@@ -113,18 +111,22 @@ def main() :
 
 	init()
 	#pdb.set_trace()
-	loopcnt = 0		#Verzögere die Abarbeitung Display und Button Funktionen
-	Config.loopmax=0
 	t_extcmd = threading.Thread(target=extCmd, args=())
 	t_extcmd.start()
 
+	loopcnt = 0		#Verzögere die Abarbeitung Display und Button Funktionen
+	Config.loopmax = [ ]
+	loopstart = time.time()
 	while(True) :
-		#loopstart = time.time()
+		loopcnt +=1
 		LoraRx.LoraRx()
-		#looptime = time.time() - loopstart
-		#if (looptime > Config.loopmax) :
-		#	Config.loopmax = looptime
 		time.sleep(0.01)
+		if loopcnt > 1000 :
+			Config.loopmax.append( int ((time.time() - loopstart )) ) 
+			loopcnt = 0
+			loopstart = time.time() 
+			if len(Config.loopmax) > 9 :
+				Config.loopmax = Config.loopmax[1:]
 
 if __name__ == "__main__":
 	main()

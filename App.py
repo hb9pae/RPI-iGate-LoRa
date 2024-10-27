@@ -85,7 +85,7 @@ def status() :
 		"Packet Err": Config.PktErr, 
 		"Wx-Data": Config.ConfigDict["en_wxdata"] ,
 		"Beacon Intervall": Config.ConfigDict["beaconinterval"] , "Beacon Message": Config.ConfigDict["beaconmsg"],
-		"Uptime": Utils.elapsedTime(), 
+		"Uptime": Utils.elapsedTime(),"LoopCnt ":Config.loopmax,  
 		"Version" : Config.Version 
 	}
 
