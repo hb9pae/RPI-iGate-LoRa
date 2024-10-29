@@ -3,7 +3,7 @@
 
 """
 Python Modul  Utils
-- logItem: Log Events with timstamp into global Log-List
+- logEvent: Log Events with timstamp into global Log-List
 """
 
 import pdb
@@ -72,7 +72,7 @@ def elapsedTime() :
 	return("%dd %dh %dm %ds" %(_d, _h,_m,_s))
 
 def checkInternet() :
-	logItem("No Internet")
+	logEvent("No Internet")
 	HMI.display(4)
 	time.sleep(5)
 
@@ -96,7 +96,7 @@ def getip():
 	return(_ip)
 
 def main() :
-	logItem("Startup")
+	logEvent("Startup")
 	pdb.set_trace()
 	print(logList)
 

@@ -41,13 +41,13 @@ def createRRD(file) :
 	)
 
 def BMEInterval() :
-	if (Config.EN_BME280) :
+	if (Config.ConfigDict["en_bme280"] ) :
 		readBME280()
 		wxGraph(Config.WXrrd)
 
 def readBME280() :
 	#pdb.set_trace()
-	if not (Config.EN_BME280) :
+	if not (Config.ConfigDict["en_bme280"]) :
 		return				# no BME280 available
 	if not (os.path.exists(Config.WXrrd)) :
 		createRRD(Config.WXrrd)
@@ -55,7 +55,7 @@ def readBME280() :
 
 	Utils.logEvent("Read BME280")
 	try :
-		_altitude = int(Config.HEIGHT)
+		_altitude = int( Config.ConfigDict["height"] )
 	except:
 		Utils.logEvent("Wrong Altitude format, assume 400m asl")
 		_altitude = 400
@@ -65,8 +65,8 @@ def readBME280() :
 		(temp, press_nn, hum) = BME280.getBME280(_altitude)
 		writeRRD(Config.WXrrd, temp, press_nn, hum)
 	except :
-		Config.en_bme280  = False
-		Config.en_wxdata = False
+		Config.ConfigDict["en_bme280"]  = False
+		Config.ConfigDict["en_wxdata"] = False
 		temp = 0
 		press_nn = 0
 		hum = 0
@@ -78,11 +78,11 @@ def readBME280() :
 
 def WxReport() :
 	#pdb.set_trace()
-	if (Config.en_wxdata) :
-		Utils.logItem("Prepare WxReport")
+	if (Config.ConfigDict["en_wxdata"]) :
+		Utils.logEvent("Prepare WxReport")
 		dt = datetime.datetime.now(datetime.timezone.utc)
 		_DHM = dt.strftime("@%d%H%Mz")
-		_pos = Config.POS[0] + "/" + Config.POS[1] 
+		_pos = Config.ConfigDict["pos"][0] + "/" + Config.ConfigDict["pos"][1]
 		_wind  = "_.../...g..."
 		_tempf = (Config.Temperature * 1.8) + 32 # APRS benötigt Farenheit 
 		_temp = "t" + str(int(round(_tempf,1)))
@@ -90,7 +90,7 @@ def WxReport() :
 		_hum = "h" + str(int(round(Config.Humidity)))
 		_press = "b" + str(int(10*round(Config.AirPressureNN,1)))
 		_id = " BME280"
-		_WxReport = Config.CALL + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
+		_WxReport = Config.ConfigDict["call"] + ">APRS:" +_DHM + _pos + _wind + _temp + _rain + _hum + _press  + _id
 		APRS.sendMsg(_WxReport)
 
 def wxGraph(rrd) :

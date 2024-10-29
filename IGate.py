@@ -64,7 +64,7 @@ def init() :
 	APRS.init()
 	HMI.initbutton()
 	LoraRx.init()
-	#WX.readBME280()
+	WX.readBME280()
 	#pdb.set_trace()
 
 	# Init Timer	iGate-Beacon, BME280, WX-Beacon
@@ -75,11 +75,11 @@ def init() :
 	if (Config.ConfigDict["en_bme280"]) :
 		BMETimer = RepeatedTimer(int(Config.BMEInterval), WX.BMEInterval ) 
 		BMETimer.start() 
-		Utils.logEvent("BME280 Timer started Interval %s sec." % (Config.ConfigDict["bmeinterval"]) )
+		Utils.logEvent("BME280 Timer started Interval %s sec." % (Config.BMEInterval) )
 
-		WxTimer = RepeatedTimer(int(Config.ConfigDiConfig.ConfigDict["wxinterval"] ), WX.WxReport ) 
+		WxTimer = RepeatedTimer(int(Config.BMEInterval ), WX.WxReport ) 
 		WxTimer.start()
-		Utils.logEvent("Wx Timer started Interval %s sec." % (Config.ConfigDict["wxinterval"]) )
+		Utils.logEvent("Wx Timer started Interval %s sec." % (Config.BMEInterval) )
 
 	webgui = threading.Thread(target=App.run, args=(Config.ConfigDict["webip"],))
 	webgui.start()
