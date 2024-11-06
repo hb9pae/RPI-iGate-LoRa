@@ -24,7 +24,7 @@ def sendMsg( msg ) :
 	if (Config.ConfigDict["en_aprsis"]) :
 		#pdb.set_trace()
 		if not Config.AIS._connected  :
-			Config.AIS = aprslib.IS(Config.ConfigDict["call"], Config.ConfigDicht["passcode"] , port=14580)
+			Config.AIS = aprslib.IS(Config.ConfigDict["call"], Config.ConfigDict["passcode"] , port=14580)
 			Config.AIS.connect()
 			Config.Login += 1
 		try :
