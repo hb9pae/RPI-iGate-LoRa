@@ -27,6 +27,7 @@
 //	RSSI of the latest packet received (dBm): RSSI[dBm] = – 137 + PacketRssi
 // 	Current RSSI value (dBm):  RSSI[dBm] = – 137 + Rssi
 #ifdef PYTHONMODULE
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #endif
 
