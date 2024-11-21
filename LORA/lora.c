@@ -617,6 +617,7 @@ int main (int argc, char *argv[]) {
 	pinMode(RST, OUTPUT);
 	ledtoggle();
 
+	//  chamge speed from 500000 to 250000
 	wiringPiSPISetup(CHANNEL, 250000);
 
 	SetupLoRa(freq, sf);
@@ -732,7 +733,8 @@ static PyObject* init(PyObject* self, PyObject* args)
 	pinMode(RST, OUTPUT);
 
 	//set up SPI
-	wiringPiSPISetup(CHANNEL, 500000);
+	//  chamge speed from 500000 to 250000
+	wiringPiSPISetup(CHANNEL, 250000);
 	SetupLoRa(freq, sf);
 
 	//sender
