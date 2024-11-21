@@ -7,6 +7,7 @@ Python Modul Config.py
 Enthält alle Globalen Variablen
 24-10-18: V 1.3.01  fast variante
 24-11-03: V 1.3.02  Koordinatenumrechnung
+24-11-20: V 1.3.02a SPI Clock neun 250000 Hz (LORA/lora.c)
 """
 
 import configparser

@@ -1,6 +1,6 @@
 # LoRa APRS-iGate für den Raspberry PI
 
-(c) 2024, Peter Stirnimann, <hb9pae@gmail.ch> Software-Version: 1.3.0
+(c) 2024, Peter Stirnimann, <hb9pae@gmail.ch> Software-Version: 1.3.02a
 
 ![Dashboard](static/Dashboard.png)
 
@@ -26,6 +26,7 @@ als LoRa-Empfänger. Weitere Informationen zum RPI-Board unter:  <https://www.sw
 - Modul HMI.py in Button.py und Display.py aufgeteilt.
 - Button.py: neue Lib lgoio, Tastenbelegung neu 1:Status, 2: Pkt Info, 3: Config  4: Menu up, 4 Menu Down
 - Display.py: neue Lib oled-txt (Ersatz für die veraltete Adafruit-SSD1306 Lib)
+- lora.c SPI Clock reduziert: Zeile 621 und 737, wiringPiSPISetup(CHANNEL, 250000);
 
 ## Copyright
 
