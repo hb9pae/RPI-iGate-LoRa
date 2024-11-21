@@ -617,7 +617,7 @@ int main (int argc, char *argv[]) {
 	pinMode(RST, OUTPUT);
 	ledtoggle();
 
-	wiringPiSPISetup(CHANNEL, 500000);
+	wiringPiSPISetup(CHANNEL, 250000);
 
 	SetupLoRa(freq, sf);
 

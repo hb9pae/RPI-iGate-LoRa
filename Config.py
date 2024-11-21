@@ -6,6 +6,7 @@
 Python Modul Config.py
 Enthält alle Globalen Variablen
 24-10-18: V 1.3.01  fast variante
+24-11-03: V 1.3.02  Koordinatenumrechnung
 """
 
 import configparser
@@ -15,8 +16,10 @@ import logging
 import re
 import datetime
 import time
+from math import floor
 
-__version__     = "1.3.01"
+
+__version__     = "1.3.02"
 __author__      = "HB9PAE, Peter"
 __copyright__   = "Copyright 2024"
 __email__       = "hb9pae@gmail.com"
@@ -87,25 +90,24 @@ def upTime() :
 	h, m = divmod(m, 60)
 	return('{:02d}:{:02d}:{:02d}'.format(h, m, s))
 
+def degrees_to_ddm(dd):
+	degrees = int(floor(dd))
+	minutes = (dd - degrees) * 60
+	return (degrees, minutes)
+
+def latitude_to_ddm(dd):
+	direction = "S" if dd < 0 else "N"
+	degrees, minutes = degrees_to_ddm(abs(dd))
+	return "{0:02d}{1:05.2f}{2}".format(degrees, minutes, direction,)
+
+def longitude_to_ddm(dd):
+	direction = "W" if dd < 0 else "E"
+	degrees, minutes = degrees_to_ddm(abs(dd))
+	return "{0:03d}{1:05.2f}{2}".format(degrees, minutes, direction,)
+
 # Umrechnen von Dezimal-Grad zu Grad-Minuten
-def grad2min(_lat, _lon) :
-	_latGrad = int(abs(_lat))
-	_latMin = 60* (_lat - _latGrad)
-	latstr = f"{_latGrad:d}{_latMin:.2f}"
-	if (_lat > 0) :
-		latstr = latstr.zfill(7) + "N"
-	else :
-		latstr = latstr + "S"
-
-	_lonGrad = int(abs(_lon))
-	_lonMin = 60.0 * (_lon - _lonGrad)
-	lonstr = f"{_lonGrad:d}{_lonMin:.2f}"
-	if (_lon > 0) :
-		lonstr = lonstr.zfill(8) + "E"
-	else :
-		lonstr = lonstr + "W"
-
-	return(latstr, lonstr)
+#def grad2min(_lat, _lon) :
+#	 return(latitude_to_ddm(_lat), longitude_to_ddm(_lon) )
 
 def setGlobals(_conf) :
 	global POS
@@ -125,7 +127,7 @@ def setGlobals(_conf) :
 					varname = varname.upper()
 
 			globals()[key.upper()] = varname
-		POS = grad2min(float(LAT), float(LON) )
+		POS = latitude_to_ddm(float(LAT)), longitude_to_ddm(float(LON))
 
 def getConfig(file) :
 	#pdb.set_trace()
